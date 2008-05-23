@@ -1,4 +1,4 @@
-Summary:	Low-latency, high-quality voice communication for gamers.
+Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.1.3
 Release:	%mkrel 1
@@ -6,7 +6,15 @@ License:	GPLv2+
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.bz2
+Source1:	%{name}.desktop
+Source2:	%{name}-server.desktop
 BuildRequires:	qt4-devel
+BuildRequires:	boost-devel
+BuildRequires:	pulseaudio-devel
+BuildRequires:	libalsa-devel
+BuildRequires:	openssl-devel
+BuildRequires:	libxevie-devel
+BuildRequires:	dbus-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 
 %description
@@ -20,15 +28,28 @@ audible to other players.
 %prep
 %setup -q
 
+#rm -fr speex
+
 %build
-qmake main.pro
+qmake main.pro DEFINIES+=NO_UPDATES DEFINIES+=DEFAULT_SOUNDSYSTEM=PulseAudio
 
 %make
 
 %install
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
 
-%makeinstall_std
+install -D -m0755 release/mumble "%{buildroot}%{_bindir}/mumble"
+install -D -m0755 release/murmurd "%{buildroot}%{_sbindir}/murmurd"
+ln_s ../sbin/murmurd "%{buildroot}%{_bindir}/mumble-server"
+ln_s murmurd "%{buildroot}%{_sbindir}/murmur"
+
+install -d "%{buildroot}%{_libdir}"
+install release/libmumble.* "%{buildroot}%{_libdir}/"
+install -D -m0644 plugins/mumble_plugin.h "%{buildroot}%{_includedir}/mumble_plugin.h"
+
+install -D -m0644 icons/mumble.64x64.png "%{buildroot}%{_datadir}/pixmaps/mumble.png"
+install -D -m0644 "%{SOURCE1}" "%{buildroot}%{_datadir}/applications/mumble.desktop"
+install -D -m0644 "%{SOURCE2}" "%{buildroot}%{_datadir}/applications/mumble-server.desktop"
 
 %find_lang %{name}
 
