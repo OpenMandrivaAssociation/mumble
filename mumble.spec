@@ -15,6 +15,7 @@ BuildRequires:	libalsa-devel
 BuildRequires:	openssl-devel
 BuildRequires:	libxevie-devel
 BuildRequires:	dbus-devel
+BuildRequires:	qt4-linguist
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 
 %description
