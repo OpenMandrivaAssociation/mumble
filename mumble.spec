@@ -77,6 +77,7 @@ audible to other players.
 %package protocol-kde3
 Summary:	The mumble protocol for KDE3
 Group:		Graphical desktop/KDE
+Requires:	%{name} = %{version}-%{release}
 
 %description protocol-kde3
 The mumble protocol for KDE3.
@@ -85,6 +86,7 @@ The mumble protocol for KDE3.
 %package protocol-kde4
 Summary:	The mumble protocol for KDE4
 Group:		Graphical desktop/KDE
+Requires:	%{name} = %{version}-%{release}
 
 %description protocol-kde4
 The mumble protocol for KDE4.
@@ -184,13 +186,9 @@ cp -Pp release/libmumble* %{buildroot}%{_libdir}/%{name}/
 cp -p release/plugins/liblink.so %{buildroot}%{_libdir}/%{name}/plugins/
 
 # Mumble icons
-
 for i in 16x16 32x32 48x48 64x64; do
 install -D -m 0644 icons/%{name}.$i.png %{buildroot}%{_iconsdir}/hicolor/$i/apps/%{name}.png ;
 done
-#install -D -m 0644 icons/%{name}.32x32.png %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
-#install -D -m 0644 icons/%{name}.48x48.png %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
-#install -D -m 0644 icons/%{name}.64x64.png %{buildroot}%{_iconsdir}/hicolor/64x64/apps/%{name}.png
 
 # Mumble desktop file
 install -d -m 0755 %{buildroot}%{_datadir}/applications
@@ -233,8 +231,6 @@ install -d -m0750 %{buildroot}%{_var}/log/%{name}-server
 
 # install example
 mkdir -p %{buildroot}%{_var}/%{name}-server/examples
-#install -m0644 LICENSE %{buildroot}%_defaultdocdir/%{name}-server/LICENSE WTF
-#install -m0644 scripts/murmur.ini %{buildroot}%_defaultdocdir/%{name}-server/examples/murmur.ini
 
 # --- Mumble-server-web files ---
 install -D -m0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}-server-web.conf
@@ -248,8 +244,6 @@ popd
 %endif
 
 # --- Manpages ---
-
-#lzma -z man/*
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 %if %build_server == 0
 install -m 0644 man/mumble* %{buildroot}%{_mandir}/man1
@@ -348,7 +342,6 @@ fi
 %endif
 %{_mandir}/man1/murmur-user-wrapper.*
 %{_mandir}/man1/murmurd.*
-#%_defaultdocdir/%{name}-server
 
 %files server-web
 %doc README.install.urpmi
