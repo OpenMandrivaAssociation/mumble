@@ -1,21 +1,68 @@
+%define major 1
+%define libname %mklibname %{name} %{major}
+%define develname %mklibname %{name} -d
+
+# configuration options for the server (murmur)
+%define build_server	1
+%define build_ice	0
+# configuration options for the client
+%define build_speechd	0
+%define build_g15	1
+
+%{?_without_server: %{expand: %%global build_server 0}}
+%{?_with_server: %{expand: %%global build_server 1}}
+
+%{?_without_ice: %{expand: %%global build_ice 0}}
+%{?_with_ice: %{expand: %%global build_ice 1}}
+
+%{?_without_speechd: %{expand: %%global build_speechd 0}}
+%{?_with_speechd: %{expand: %%global build_speechd 1}}
+
+%{?_without_g15: %{expand: %%global build_g15 0}}
+%{?_with_g15: %{expand: %%global build_g15 1}}
+
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.1.3
+Version:	1.1.7
 Release:	%mkrel 1
 License:	GPLv2+
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.bz2
-Source1:	%{name}.desktop
-Source2:	%{name}-server.desktop
-BuildRequires:	qt4-devel
+# conf files courtesy of debian package
+Source1:	%{name}-server.ini
+Source2:	%{name}-server-web.conf
+Source3:	MurmurPHP.ini
+Source4:	README.install.urpmi.mumble-server-web
+Source5:	%{name}-server-init.mdv
+Patch0:		%{name}-fix-string-error.patch
+%if %mdkversion < 200910
+Buildrequires:	kde3-macros
+%endif 
+Buildrequires:	kde4-macros
+BuildRequires:	libspeex-devel
+BuildRequires:	qt4-devel >= 4.3.0
 BuildRequires:	boost-devel
 BuildRequires:	pulseaudio-devel
 BuildRequires:	libalsa-devel
 BuildRequires:	openssl-devel
 BuildRequires:	libxevie-devel
-BuildRequires:	dbus-devel
-BuildRequires:	qt4-linguist
+BuildRequires:	qt4-linguist >= 4.3.0
+%if %build_speechd
+BuildRequires:	speech-dispatcher-devel
+%endif
+%if %build_g15
+BuildRequires:	g15daemon_client-devel
+%endif
+Requires:	qt4-database-plugin-sqlite >= 4.3.0
+Requires:	%{libname} = %{version}-%{release}
+Suggests:	%{name}.protocol
+%if %build_speechd
+Suggests:	speech-dispatcher
+%endif
+%if %build_g15
+Suggests:	g15daemon
+%endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 
 %description
@@ -26,52 +73,287 @@ from the direction of their characters, and has echo
 cancellation so the sound from your loudspeakers won't be 
 audible to other players.
 
+%if %mdkversion < 200910
+%package protocol-kde3
+Summary:	The mumble protocol for KDE3
+Group:		Graphical desktop/KDE
+
+%description protocol-kde3
+The mumble protocol for KDE3.
+%endif
+
+%package protocol-kde4
+Summary:	The mumble protocol for KDE4
+Group:		Graphical desktop/KDE
+
+%description protocol-kde4
+The mumble protocol for KDE4.
+
+%package -n %{libname}
+Summary:	The mumble library
+Group:		System/Libraries
+# ugly fix for a requires on libc.so.6(GLIBC_PRIVATE) from
+# the lib that makes the package uninstallable without
+# --nodeps
+AutoReqProv:	0
+
+%description -n %{libname}
+This packages provides the Mumble library.
+
+%package -n %{develname}
+Summary:	Development files for %{name}
+Group:		Development/Other
+Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel= %{version}-%{release}
+Provides:	lib%{name}-devel= %{version}-%{release}
+
+%description -n %{develname}
+This package contain development files for %{name}.
+
+%if %build_server
+%package server
+Summary:	Murmur, the VOIP server for Mumble
+Group:		Sound
+Requires(post):	rpm-helper
+Requires(preun):	rpm-helper
+%if %build_ice
+BuildRequires:	slice2cpp
+%endif
+Requires:	%{name} = %{version}-%{release}
+Requires:	dbus
+
+%description server
+This package provides Murmur, the VOIP server for Mumble.
+
+%package server-web
+Summary:	Web scripts for mumble-server
+Group:		Sound
+Requires:	apache
+Requires:	perl-CGI
+Requires:	mail-server
+%if %build_ice
+Requires:	zeroc-ice-php
+%endif
+Requires:	%{name}-server = %{version}-%{release}
+
+%description server-web
+This package contains the web scripts for mumble-server.
+
+%endif
+
 %prep
 %setup -q
-
-#rm -fr speex
+%patch0 -p0
+cp -p %{SOURCE4} README.install.urpmi
 
 %build
-qmake main.pro DEFINIES+=NO_UPDATES DEFINIES+=DEFAULT_SOUNDSYSTEM=PulseAudio
+%qmake_qt4 main.pro \
+%if %build_server == 0
+	CONFIG+=no-server \
+%endif
+%if %build_ice == 0
+	CONFIG+=no-ice \
+%endif
+%if %build_speechd == 0
+	CONFIG+=no-speechd \
+%endif
+%if %build_g15 == 0
+	CONFIG+=no-g15 \
+%endif
+	CONFIG+=no-bundled-speex \
+	CONFIG+=no-embed-qt-translations \
+	CONFIG+=no-update \
+	DEFINES+=PLUGIN_PATH=%{_libdir}/%{name} \
+	DEFINES+=DEFAULT_SOUNDSYSTEM=PulseAudio
 
 %make
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
-install -D -m0755 release/mumble "%{buildroot}%{_bindir}/mumble"
+# --- Mumble install ---
+
+install -D -m 0755 release/%{name} %{buildroot}%{_bindir}/%{name}
+install -m 0755 scripts/%{name}-overlay %{buildroot}%{_bindir}/%{name}-overlay
+install -D -m 0755 scripts/%{name}.protocol %{buildroot}%{_kde_datadir}/kde4/services/%{name}.protocol
+%if %mdkversion < 200910
+install -D -m 0755 scripts/%{name}.protocol %{buildroot}%{_kde3_datadir}/kde3/services/%{name}.protocol
+%endif
+install -d -m 0755 %{buildroot}%{_libdir}/%{name}/plugins
+cp -Pp release/libmumble* %{buildroot}%{_libdir}/%{name}/
+cp -p release/plugins/liblink.so %{buildroot}%{_libdir}/%{name}/plugins/
+
+# Mumble icons
+
+for i in 16x16 32x32 48x48 64x64; do
+install -D -m 0644 icons/%{name}.$i.png %{buildroot}%{_iconsdir}/hicolor/$i/apps/%{name}.png ;
+done
+#install -D -m 0644 icons/%{name}.32x32.png %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+#install -D -m 0644 icons/%{name}.48x48.png %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
+#install -D -m 0644 icons/%{name}.64x64.png %{buildroot}%{_iconsdir}/hicolor/64x64/apps/%{name}.png
+
+# Mumble desktop file
+install -d -m 0755 %{buildroot}%{_datadir}/applications
+install -m 0644 scripts/%{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
+desktop-file-install \
+        --remove-category="Qt" \
+        --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
+
+%if %build_server
+# --- Mumble-server/Murmur install ---
+
 install -D -m0755 release/murmurd "%{buildroot}%{_sbindir}/murmurd"
-ln_s ../sbin/murmurd "%{buildroot}%{_bindir}/mumble-server"
-ln_s murmurd "%{buildroot}%{_sbindir}/murmur"
+install -m0755 scripts/murmur-user-wrapper %{buildroot}%{_bindir}/
+mkdir -p %{buildroot}%{_sysconfdir}/{dbus-1/system.d,logrotate.d}
+install -m0644 scripts/murmur.conf %{buildroot}%{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
+install -m0644 scripts/murmur.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-server
+install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}-server.ini
 
-install -d "%{buildroot}%{_libdir}"
-install release/libmumble.* "%{buildroot}%{_libdir}/"
-install -D -m0644 plugins/mumble_plugin.h "%{buildroot}%{_includedir}/mumble_plugin.h"
+%if %build_ice
+# install Mumur.ice  in /usr/share/slice
+install -D -m0755 src/murmur/Murmur.ice %{buildroot}%{_datadir}/slice/Murmur.ice
+%endif
 
-install -D -m0644 icons/mumble.64x64.png "%{buildroot}%{_datadir}/pixmaps/mumble.png"
-install -D -m0644 "%{SOURCE1}" "%{buildroot}%{_datadir}/applications/mumble.desktop"
-install -D -m0644 "%{SOURCE2}" "%{buildroot}%{_datadir}/applications/mumble-server.desktop"
+# install initscript
+mkdir -p %{buildroot}%{_initrddir}
+install -m0700 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-server
 
-%find_lang %{name}
+# create /etc/default/mumble-server
+mkdir %{buildroot}%{_sysconfdir}/default
+cat << EOF > %{buildroot}%{_sysconfdir}/default/%{name}-server
+#0 = don't start, 1 = start
+MURMUR_DAEMON_START=0
+EOF
+
+# create database directory
+install -d -m0750 %{buildroot}%{_var}/lib/%{name}-server
+
+# create log directory
+install -d -m0750 %{buildroot}%{_var}/log/%{name}-server
+
+# install example
+mkdir -p %{buildroot}%{_var}/%{name}-server/examples
+#install -m0644 LICENSE %{buildroot}%_defaultdocdir/%{name}-server/LICENSE WTF
+#install -m0644 scripts/murmur.ini %{buildroot}%_defaultdocdir/%{name}-server/examples/murmur.ini
+
+# --- Mumble-server-web files ---
+install -D -m0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}-server-web.conf
+install -D -m0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/php.d/MurmurPHP.ini
+install -D -m0644 scripts/weblist.php %{buildroot}%{_datadir}/%{name}-server-web/www/weblist.php
+install -D -m0755 scripts/weblist.pl %{buildroot}%{_datadir}/%{name}-server-web/www/weblist.cgi
+install -D -m0755 scripts/murmur.pl %{buildroot}%{_datadir}/%{name}-server-web/www/register.cgi
+pushd %{buildroot}%{_datadir}/%{name}-server-web/www
+ln -s weblist.php index.php
+popd
+%endif
+
+# --- Manpages ---
+
+#lzma -z man/*
+install -d -m 0755 %{buildroot}%{_mandir}/man1
+%if %build_server == 0
+install -m 0644 man/mumble* %{buildroot}%{_mandir}/man1
+%else
+install -m 0644 man/* %{buildroot}%{_mandir}/man1
+%endif
+
+%clean
+rm -rf %{buildroot}
 
 %if %mdkversion < 200900
 %post
 %{update_menus}
-%{update_desktop_database}
+%update_desktop_database
 %update_icon_cache hicolor
 %endif
 
 %if %mdkversion < 200900
 %postun
 %{clean_menus}
-%{clean_desktop_database}
+%clean_desktop_database
 %clean_icon_cache hicolor
 %endif
 
-%clean
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
 
-%files -f %{name}.lang
-%defattr(644,root,root,755)
-%doc
-%attr(755,root,root)
+%if %mdkversion < 200900
+%post -p /sbin/ldconfig -n %libname
+%endif
+%if %mdkversion < 200900
+%postun -p /sbin/ldconfig -n %libname
+%endif
+
+%if %build_server
+%pre server
+%_pre_useradd %{name}-server %{_var}/lib/%{name}-server /bin/sh
+
+%post server
+%_post_service %{name}-server
+%__service messagebus reload
+
+%preun server
+if [ $1 = 0 ]; then
+	%_preun_service %{name}-server
+fi
+
+%postun server
+%_postun_userdel %{name}-server
+%endif
+
+
+%files
+%defattr(-,root,root)
+%doc README README.Linux CHANGES LICENSE
+%{_bindir}/%{name}
+%{_bindir}/%{name}-overlay
+%{_libdir}/%{name}/plugins/liblink.so
+%{_datadir}/applications/%{name}.desktop
+%{_iconsdir}/hicolor/*/apps/%{name}.png
+%{_mandir}/man1/%{name}.*
+%{_mandir}/man1/%{name}-overlay.*
+
+%if %mdkversion < 200910
+%files protocol-kde3
+%defattr(-,root,root)
+%{_kde3_datadir}/kde3/services/%{name}.protocol
+%endif
+
+%files protocol-kde4
+%defattr(-,root,root)
+%{_kde_datadir}/kde4/services/%{name}.protocol
+
+%files -n %{libname}
+%defattr(-,root,root)
+%dir %_libdir/%{name}
+%_libdir/%{name}/*.so.%{major}*
+
+%files -n %{develname}
+%defattr(-,root,root)
+%{_libdir}/%{name}/*.so
+
+%if %build_server
+%files server
+%defattr(-,root,root)
+%doc scripts/murmur.ini
+%{_bindir}/murmur-user-wrapper
+%{_sbindir}/murmurd
+%{_initrddir}/%{name}-server
+%{_sysconfdir}/%{name}-server.ini
+%{_sysconfdir}/logrotate.d/%{name}-server
+%{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
+%config(noreplace) %{_sysconfdir}/default/%{name}-server
+%attr(-,mumble-server,mumble-server) %dir %{_var}/lib/%{name}-server
+%attr(-,mumble-server,root) %dir %{_var}/log/%{name}-server
+%if %build_ice
+%{_datadir}/slice/Murmur.ice
+%endif
+%{_mandir}/man1/murmur-user-wrapper.*
+%{_mandir}/man1/murmurd.*
+#%_defaultdocdir/%{name}-server
+
+%files server-web
+%doc README.install.urpmi
+%defattr(-,root,root)
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}-server-web.conf
+%config(noreplace) %{_sysconfdir}/php.d/MurmurPHP.ini
+%{_datadir}/%{name}-server-web
+%endif
