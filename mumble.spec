@@ -36,6 +36,7 @@ Source3:	MurmurPHP.ini
 Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
 Patch0:		%{name}-fix-string-error.patch
+Patch1:		%{name}-fixsegfault.patch
 %if %mdkversion < 200910
 Buildrequires:	kde3-macros
 %endif 
@@ -146,6 +147,7 @@ This package contains the web scripts for mumble-server.
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p0
 cp -p %{SOURCE4} README.install.urpmi
 
 %build
@@ -194,8 +196,8 @@ done
 install -d -m 0755 %{buildroot}%{_datadir}/applications
 install -m 0644 scripts/%{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
 desktop-file-install \
-        --remove-category="Qt" \
-        --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
+		     --remove-category="Qt" \
+		     --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
 
 %if %build_server
 # --- Mumble-server/Murmur install ---
