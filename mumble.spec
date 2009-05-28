@@ -1,7 +1,3 @@
-%define major 1
-%define libname %mklibname %{name} %{major}
-%define develname %mklibname %{name} -d
-
 # configuration options for the server (murmur)
 %define build_server	1
 %define build_ice	0
@@ -23,12 +19,12 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.1.7
-Release:	%mkrel 2
-License:	GPLv2+
+Version:	1.1.8
+Release:	%mkrel 1
+License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
-Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.bz2
+Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
 Source2:	%{name}-server-web.conf
@@ -36,19 +32,18 @@ Source3:	MurmurPHP.ini
 Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
 Patch0:		%{name}-fix-string-error.patch
-Patch1:		%{name}-fixsegfault.patch
 %if %mdkversion < 200910
 Buildrequires:	kde3-macros
 %endif 
 Buildrequires:	kde4-macros
 BuildRequires:	libspeex-devel
-BuildRequires:	qt4-devel >= 4.3.0
+BuildRequires:	qt4-devel >= 4.4.1
 BuildRequires:	boost-devel
 BuildRequires:	pulseaudio-devel
 BuildRequires:	libalsa-devel
 BuildRequires:	openssl-devel
 BuildRequires:	libxevie-devel
-BuildRequires:	qt4-linguist >= 4.3.0
+BuildRequires:	qt4-linguist >= 4.4.1
 %if %build_speechd
 BuildRequires:	speech-dispatcher-devel
 %endif
@@ -56,7 +51,7 @@ BuildRequires:	speech-dispatcher-devel
 BuildRequires:	g15daemon_client-devel
 %endif
 Requires:	qt4-database-plugin-sqlite >= 4.3.0
-Requires:	%{libname} = %{version}-%{release}
+Requires:	%{name}-plugins = %{version}-%{release}
 Suggests:	%{name}.protocol
 %if %build_speechd
 Suggests:	speech-dispatcher
@@ -92,26 +87,21 @@ Requires:	%{name} = %{version}-%{release}
 %description protocol-kde4
 The mumble protocol for KDE4.
 
-%package -n %{libname}
-Summary:	The mumble library
+%package plugins
+Summary:	Mumble plugins
 Group:		System/Libraries
+# 24 may 2009 : necessary for upgrading
+Provides:       %mklibname %{name} 1 
+Provides:       %mklibname %{name} -d
+Obsoletes:	%mklibname %{name} 1
+Obsoletes:	%mklibname %{name} -d
 # ugly fix for a requires on libc.so.6(GLIBC_PRIVATE) from
-# the lib that makes the package uninstallable without
+# the plugin that makes the package uninstallable without
 # --nodeps
 AutoReqProv:	0
 
-%description -n %{libname}
-This packages provides the Mumble library.
-
-%package -n %{develname}
-Summary:	Development files for %{name}
-Group:		Development/Other
-Requires:	%{libname} = %{version}-%{release}
-Provides:	%{name}-devel= %{version}-%{release}
-Provides:	lib%{name}-devel= %{version}-%{release}
-
-%description -n %{develname}
-This package contain development files for %{name}.
+%description plugins
+This packages provides the Mumble plugins.
 
 %if %build_server
 %package server
@@ -146,8 +136,7 @@ This package contains the web scripts for mumble-server.
 
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p0
+%patch0 -p1 -b .strfmt
 cp -p %{SOURCE4} README.install.urpmi
 
 %build
@@ -216,7 +205,7 @@ install -D -m0755 src/murmur/Murmur.ice %{buildroot}%{_datadir}/slice/Murmur.ice
 
 # install initscript
 mkdir -p %{buildroot}%{_initrddir}
-install -m0700 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-server
+install -m0744 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-server
 
 # create /etc/default/mumble-server
 mkdir %{buildroot}%{_sysconfdir}/default
@@ -226,10 +215,10 @@ MURMUR_DAEMON_START=0
 EOF
 
 # create database directory
-install -d -m0750 %{buildroot}%{_var}/lib/%{name}-server
+install -d -m0755 %{buildroot}%{_var}/lib/%{name}-server
 
 # create log directory
-install -d -m0750 %{buildroot}%{_var}/log/%{name}-server
+install -d -m0755 %{buildroot}%{_var}/log/%{name}-server
 
 # install example
 mkdir -p %{buildroot}%{_var}/%{name}-server/examples
@@ -271,13 +260,6 @@ rm -rf %{buildroot}
 %endif
 
 
-%if %mdkversion < 200900
-%post -p /sbin/ldconfig -n %libname
-%endif
-%if %mdkversion < 200900
-%postun -p /sbin/ldconfig -n %libname
-%endif
-
 %if %build_server
 %pre server
 %_pre_useradd %{name}-server %{_var}/lib/%{name}-server /bin/sh
@@ -301,7 +283,6 @@ fi
 %doc README README.Linux CHANGES LICENSE
 %{_bindir}/%{name}
 %{_bindir}/%{name}-overlay
-%{_libdir}/%{name}/plugins/liblink.so
 %{_datadir}/applications/%{name}.desktop
 %{_iconsdir}/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/%{name}.*
@@ -317,14 +298,9 @@ fi
 %defattr(-,root,root)
 %{_kde_datadir}/kde4/services/%{name}.protocol
 
-%files -n %{libname}
-%defattr(-,root,root)
-%dir %_libdir/%{name}
-%_libdir/%{name}/*.so.%{major}*
-
-%files -n %{develname}
-%defattr(-,root,root)
-%{_libdir}/%{name}/*.so
+%files plugins
+%defattr(-,root,root,-)
+%{_libdir}/%{name}
 
 %if %build_server
 %files server
