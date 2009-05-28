@@ -90,6 +90,7 @@ The mumble protocol for KDE4.
 %package plugins
 Summary:	Mumble plugins
 Group:		System/Libraries
+Requires:       %{name} = %{version}-%{release}
 # 24 may 2009 : necessary for upgrading
 Provides:       %mklibname %{name} 1 
 Provides:       %mklibname %{name} -d
