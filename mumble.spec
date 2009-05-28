@@ -41,6 +41,7 @@ BuildRequires:	qt4-devel >= 4.4.1
 BuildRequires:	boost-devel
 BuildRequires:	pulseaudio-devel
 BuildRequires:	libalsa-devel
+BuildRequires:	libogg-devel
 BuildRequires:	openssl-devel
 BuildRequires:	libxevie-devel
 BuildRequires:	qt4-linguist >= 4.4.1
