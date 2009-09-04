@@ -311,7 +311,7 @@ fi
 %{_bindir}/murmur-user-wrapper
 %{_sbindir}/murmurd
 %{_initrddir}/%{name}-server
-%{_sysconfdir}/%{name}-server.ini
+%config(noreplace %{_sysconfdir}/%{name}-server.ini
 %{_sysconfdir}/logrotate.d/%{name}-server
 %{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
 %config(noreplace) %{_sysconfdir}/default/%{name}-server
