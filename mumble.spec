@@ -2,7 +2,7 @@
 %define build_server	1
 %define build_ice	0
 # configuration options for the client
-%define build_speechd	0
+%define build_speechd	1
 %define build_g15	1
 
 %{?_without_server: %{expand: %%global build_server 0}}
@@ -19,12 +19,12 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.1.8
-Release:	%mkrel 2
+Version:	1.2.0
+Release:	%mkrel 0.beta1.1
 License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
-Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}~beta1.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
 Source2:	%{name}-server-web.conf
@@ -37,6 +37,7 @@ Buildrequires:	kde3-macros
 %endif 
 Buildrequires:	kde4-macros
 BuildRequires:	libspeex-devel
+BuildRequires:	celt-devel
 BuildRequires:	qt4-devel >= 4.4.1
 BuildRequires:	boost-devel
 BuildRequires:	pulseaudio-devel
@@ -45,6 +46,8 @@ BuildRequires:	libogg-devel
 BuildRequires:	openssl-devel
 BuildRequires:	libxevie-devel
 BuildRequires:	qt4-linguist >= 4.4.1
+BuildRequires:	protobuf-devel
+BuildRequires:	protobuf-compiler
 %if %build_speechd
 BuildRequires:	speech-dispatcher-devel
 %endif
@@ -70,6 +73,15 @@ from the direction of their characters, and has echo
 cancellation so the sound from your loudspeakers won't be 
 audible to other players.
 
+%package 11x
+Summary:	The 1.1.x compatible client for mumble
+Group:		Sound
+Requires:	%{name} = %{version}-%{release}
+
+%description 11x
+This package provides the 1.1.x compatible client for Mumble, used
+to connect to older servers.
+
 %if %mdkversion < 200910
 %package protocol-kde3
 Summary:	The mumble protocol for KDE3
@@ -90,7 +102,7 @@ The mumble protocol for KDE4.
 
 %package plugins
 Summary:	Mumble plugins
-Group:		System/Libraries
+Group:		Sound
 Requires:       %{name} = %{version}-%{release}
 # 24 may 2009 : necessary for upgrading
 Provides:       %mklibname %{name} 1 
@@ -137,7 +149,7 @@ This package contains the web scripts for mumble-server.
 %endif
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}~beta1
 %patch0 -p1 -b .strfmt
 cp -p %{SOURCE4} README.install.urpmi
 
@@ -156,6 +168,7 @@ cp -p %{SOURCE4} README.install.urpmi
 	CONFIG+=no-g15 \
 %endif
 	CONFIG+=no-bundled-speex \
+	CONFIG+=no-bundled-celt \
 	CONFIG+=no-embed-qt-translations \
 	CONFIG+=no-update \
 	DEFINES+=PLUGIN_PATH=%{_libdir}/%{name} \
@@ -176,12 +189,13 @@ install -D -m 0755 scripts/%{name}.protocol %{buildroot}%{_kde3_datadir}/kde3/se
 %endif
 install -d -m 0755 %{buildroot}%{_libdir}/%{name}/plugins
 cp -Pp release/libmumble* %{buildroot}%{_libdir}/%{name}/
-cp -p release/plugins/liblink.so %{buildroot}%{_libdir}/%{name}/plugins/
+cp -p release/plugins/liblink.so %{buildroot}%{_libdir}/%{name}/
+
+# ---Mumble 11X ---
+install -D -m 0755 release/%{name}11x %{buildroot}%{_bindir}/%{name}11x
 
 # Mumble icons
-for i in 16x16 32x32 48x48 64x64; do
-install -D -m 0644 icons/%{name}.$i.png %{buildroot}%{_iconsdir}/hicolor/$i/apps/%{name}.png ;
-done
+install -D -m 0644 icons/%{name}.svg %{buildroot}%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
 
 # Mumble desktop file
 install -d -m 0755 %{buildroot}%{_datadir}/applications
@@ -189,6 +203,12 @@ install -m 0644 scripts/%{name}.desktop %{buildroot}%{_datadir}/applications/%{n
 desktop-file-install \
 		     --remove-category="Qt" \
 		     --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
+
+# Create a Mumble11x desktop file from the Mumble one
+sed -e "s/Name\=Mumble/Name\=Mumble-11x/g" \
+	-e "s/Exec\=mumble/Exec\=mumble11x/g" \
+	%{buildroot}%{_datadir}/applications/%{name}.desktop \
+	> %{buildroot}%{_datadir}/applications/%{name}11x.desktop
 
 %if %build_server
 # --- Mumble-server/Murmur install ---
@@ -286,9 +306,15 @@ fi
 %{_bindir}/%{name}
 %{_bindir}/%{name}-overlay
 %{_datadir}/applications/%{name}.desktop
-%{_iconsdir}/hicolor/*/apps/%{name}.png
+%{_iconsdir}/hicolor/*/apps/%{name}.svg
 %{_mandir}/man1/%{name}.*
 %{_mandir}/man1/%{name}-overlay.*
+
+%files 11x
+%defattr(-,root,root,-)
+%{_bindir}/%{name}11x
+%{_datadir}/applications/%{name}11x.desktop
+%{_mandir}/man1/%{name}11x.*
 
 %if %mdkversion < 200910
 %files protocol-kde3
