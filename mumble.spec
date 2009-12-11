@@ -175,7 +175,7 @@ cp -p %{SOURCE4} README.install.urpmi
 	DEFINES+=PLUGIN_PATH=%{_libdir}/%{name} \
 	DEFINES+=DEFAULT_SOUNDSYSTEM=PulseAudio
 
-make -j2
+%make
 
 %install
 rm -rf %{buildroot}
