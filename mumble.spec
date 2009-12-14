@@ -20,7 +20,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.2.0
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
@@ -37,7 +37,7 @@ Buildrequires:	kde3-macros
 %endif 
 Buildrequires:	kde4-macros
 BuildRequires:	libspeex-devel
-BuildRequires:	celt-devel
+BuildRequires:	celt-devel >= 0.7.0
 BuildRequires:	qt4-devel >= 4.4.1
 BuildRequires:	boost-devel
 BuildRequires:	pulseaudio-devel
