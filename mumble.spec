@@ -38,6 +38,7 @@ Source2:	%{name}-server-web.conf
 Source3:	MurmurPHP.ini
 Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
+Source6:	%{name}-server.logrotate
 Patch0:		%{name}-fix-string-error.patch
 %if %mdkversion < 200910
 Buildrequires:	kde3-macros
@@ -230,7 +231,7 @@ install -D -m0755 release/murmurd "%{buildroot}%{_sbindir}/murmurd"
 install -D -m0755 scripts/murmur-user-wrapper %{buildroot}%{_bindir}/murmur-user-wrapper
 mkdir -p %{buildroot}%{_sysconfdir}/{dbus-1/system.d,logrotate.d}
 install -m0644 scripts/murmur.conf %{buildroot}%{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
-install -m0644 scripts/murmur.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-server
+install -m0644 %{SOURCE6} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-server
 install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}-server.ini
 
 %if %build_ice
