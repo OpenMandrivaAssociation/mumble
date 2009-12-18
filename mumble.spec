@@ -2,14 +2,21 @@
 %define build_server	1
 %define build_ice	0
 # configuration options for the client
+%define build_client	1
 %define build_speechd	1
 %define build_g15	1
 
 %{?_without_server: %{expand: %%global build_server 0}}
+%{?_without_server: %{expand: %%global build_ice 0}}
 %{?_with_server: %{expand: %%global build_server 1}}
 
 %{?_without_ice: %{expand: %%global build_ice 0}}
 %{?_with_ice: %{expand: %%global build_ice 1}}
+
+%{?_without_client: %{expand: %%global build_client 0}}
+%{?_without_client: %{expand: %%global build_speechd 0}}
+%{?_without_client: %{expand: %%global build_g15 0}}
+%{?_with_client: %{expand: %%global build_client 1}}
 
 %{?_without_speechd: %{expand: %%global build_speechd 0}}
 %{?_with_speechd: %{expand: %%global build_speechd 1}}
@@ -127,7 +134,7 @@ Requires(preun):	rpm-helper
 %if %build_ice
 BuildRequires:	slice2cpp
 %endif
-Requires:	%{name} = %{version}-%{release}
+Requires:	qt4-database-plugin-sqlite >= 4.3.0
 Requires:	dbus
 
 %description server
@@ -162,6 +169,9 @@ cp -p %{SOURCE4} README.install.urpmi
 %if %build_ice == 0
 	CONFIG+=no-ice \
 %endif
+%if %build_client == 0
+	CONFIG+=no-client \
+%endif
 %if %build_speechd == 0
 	CONFIG+=no-speechd \
 %endif
@@ -180,6 +190,7 @@ make -j2
 %install
 rm -rf %{buildroot}
 
+%if %build_client
 # --- Mumble install ---
 
 install -D -m 0755 release/%{name} %{buildroot}%{_bindir}/%{name}
@@ -210,12 +221,13 @@ sed -e "s/Name\=Mumble/Name\=Mumble-11x/g" \
 	-e "s/Exec\=mumble/Exec\=mumble11x/g" \
 	%{buildroot}%{_datadir}/applications/%{name}.desktop \
 	> %{buildroot}%{_datadir}/applications/%{name}11x.desktop
+%endif
 
 %if %build_server
 # --- Mumble-server/Murmur install ---
 
 install -D -m0755 release/murmurd "%{buildroot}%{_sbindir}/murmurd"
-install -m0755 scripts/murmur-user-wrapper %{buildroot}%{_bindir}/
+install -D -m0755 scripts/murmur-user-wrapper %{buildroot}%{_bindir}/murmur-user-wrapper
 mkdir -p %{buildroot}%{_sysconfdir}/{dbus-1/system.d,logrotate.d}
 install -m0644 scripts/murmur.conf %{buildroot}%{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
 install -m0644 scripts/murmur.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-server
@@ -259,15 +271,17 @@ popd
 
 # --- Manpages ---
 install -d -m 0755 %{buildroot}%{_mandir}/man1
-%if %build_server == 0
+%if %build_server
+install -m 0644 man/murmur* %{buildroot}%{_mandir}/man1
+%endif
+%if %build_client
 install -m 0644 man/mumble* %{buildroot}%{_mandir}/man1
-%else
-install -m 0644 man/* %{buildroot}%{_mandir}/man1
 %endif
 
 %clean
 rm -rf %{buildroot}
 
+%if %build_client
 %if %mdkversion < 200900
 %post
 %{update_menus}
@@ -281,7 +295,7 @@ rm -rf %{buildroot}
 %clean_desktop_database
 %clean_icon_cache hicolor
 %endif
-
+%endif
 
 %if %build_server
 %pre server
@@ -301,6 +315,7 @@ fi
 %endif
 
 
+%if %build_client
 %files
 %defattr(-,root,root)
 %doc README README.Linux CHANGES LICENSE
@@ -330,9 +345,13 @@ fi
 %files plugins
 %defattr(-,root,root,-)
 %{_libdir}/%{name}
+%endif
 
 %if %build_server
 %files server
+%if %build_client == 0
+%doc README README.Linux CHANGES LICENSE
+%endif
 %defattr(-,root,root)
 %doc scripts/murmur.ini
 %{_bindir}/murmur-user-wrapper
