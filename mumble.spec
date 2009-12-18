@@ -242,13 +242,6 @@ install -D -m0755 src/murmur/Murmur.ice %{buildroot}%{_datadir}/slice/Murmur.ice
 mkdir -p %{buildroot}%{_initrddir}
 install -m0744 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-server
 
-# create /etc/default/mumble-server
-mkdir %{buildroot}%{_sysconfdir}/default
-cat << EOF > %{buildroot}%{_sysconfdir}/default/%{name}-server
-#0 = don't start, 1 = start
-MURMUR_DAEMON_START=0
-EOF
-
 # create database directory
 install -d -m0755 %{buildroot}%{_var}/lib/%{name}-server
 
@@ -360,7 +353,6 @@ fi
 %config(noreplace) %{_sysconfdir}/%{name}-server.ini
 %{_sysconfdir}/logrotate.d/%{name}-server
 %{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
-%config(noreplace) %{_sysconfdir}/default/%{name}-server
 %attr(-,mumble-server,mumble-server) %dir %{_var}/lib/%{name}-server
 %attr(-,mumble-server,root) %dir %{_var}/log/%{name}-server
 %if %build_ice
