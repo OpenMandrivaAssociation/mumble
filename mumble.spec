@@ -359,7 +359,7 @@ fi
 %{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
 %attr(-,mumble-server,mumble-server) %dir %{_var}/lib/%{name}-server
 %attr(-,mumble-server,root) %dir %{_var}/log/%{name}-server
-%attr(-,mumble-server,mumble-server) %dir %{var}/run/%{name}-server
+%attr(-,mumble-server,mumble-server) %dir %{_var}/run/%{name}-server
 %if %build_ice
 %{_datadir}/slice/Murmur.ice
 %endif
