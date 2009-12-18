@@ -248,6 +248,9 @@ install -d -m0755 %{buildroot}%{_var}/lib/%{name}-server
 # create log directory
 install -d -m0755 %{buildroot}%{_var}/log/%{name}-server
 
+# create pidfile directory
+install -d -m0755 %{buildroot}%{_var}/run/%{name}-server
+
 # install example
 mkdir -p %{buildroot}%{_var}/%{name}-server/examples
 
@@ -355,6 +358,7 @@ fi
 %{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
 %attr(-,mumble-server,mumble-server) %dir %{_var}/lib/%{name}-server
 %attr(-,mumble-server,root) %dir %{_var}/log/%{name}-server
+%attr(-,mumble-server,mumble-server) %dir %{var}/run/%{name}-server
 %if %build_ice
 %{_datadir}/slice/Murmur.ice
 %endif
