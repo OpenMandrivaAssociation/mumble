@@ -27,7 +27,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.2.2
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
