@@ -26,8 +26,8 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.2.2
-Release:	%mkrel 3
+Version:	1.2.3
+Release:	%mkrel 1
 License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
@@ -39,8 +39,6 @@ Source3:	MurmurPHP.ini
 Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
 Source6:	%{name}-server.logrotate
-Patch0:		%{name}-1.2.1-mdv-fix-string-error.patch
-Patch1:		mumble-1.2.2-link.patch
 %if %mdkversion < 200910
 Buildrequires:	kde3-macros
 %endif 
@@ -117,8 +115,8 @@ Requires:       %{name} = %{version}-%{release}
 # 24 may 2009 : necessary for upgrading
 Provides:       %mklibname %{name} 1
 Provides:       %mklibname %{name} -d
-Obsoletes:	%mklibname %{name} 1
-Obsoletes:	%mklibname %{name} -d
+Obsoletes:	%mklibname %{name} 1 < %{version}
+Obsoletes:	%mklibname %{name} -d < %{version}
 
 %description plugins
 This packages provides the Mumble plugins.
@@ -156,8 +154,6 @@ This package contains the web scripts for mumble-server.
 
 %prep
 %setup -q
-%patch0 -p1 -b .strfmt
-%patch1 -p0 -b .link
 cp -p %{SOURCE4} README.install.urpmi
 
 %build
