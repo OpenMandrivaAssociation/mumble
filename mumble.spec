@@ -64,6 +64,7 @@ BuildRequires:	qt4-linguist >= 4.4.1
 BuildRequires:	protobuf-devel
 BuildRequires:	protobuf-compiler
 BuildRequires:	avahi-compat-libdns_sd-devel
+BuildRequires:	pkgconfig(xi) >= 1.6.0
 %if %build_speechd
 BuildRequires:	speech-dispatcher-devel
 %endif
