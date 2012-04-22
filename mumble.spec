@@ -6,6 +6,8 @@
 %define build_speechd	1
 %define build_g15	1
 
+%define git 20120422
+
 %{?_without_server: %{expand: %%global build_server 0}}
 %{?_without_server: %{expand: %%global build_ice 0}}
 %{?_with_server: %{expand: %%global build_server 1}}
@@ -26,12 +28,17 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.2.3
-Release:	%mkrel 1
+Version:	1.2.4
+%if "%git" != ""
+Release:	0.%git.1
+Source0:	%name-%git.tar.xz
+%else
+Release:	1
+Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.gz
+%endif
 License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
-Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
 Source2:	%{name}-server-web.conf
@@ -39,12 +46,13 @@ Source3:	MurmurPHP.ini
 Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
 Source6:	%{name}-server.logrotate
+Patch0:		mumble-1.2.4-celt-0.11.1.patch
 %if %mdkversion < 200910
 Buildrequires:	kde3-macros
 %endif 
 Buildrequires:	kde4-macros
 BuildRequires:	libspeex-devel
-BuildRequires:	celt-devel >= 0.7.0
+BuildRequires:	pkgconfig(celt) >= 0.11.1
 BuildRequires:	qt4-devel >= 4.4.1
 BuildRequires:	boost-devel
 BuildRequires:	pulseaudio-devel
@@ -65,13 +73,24 @@ BuildRequires:	g15daemon_client-devel
 Requires:	qt4-database-plugin-sqlite >= 4.3.0
 Requires:	%{name}-plugins = %{version}-%{release}
 Suggests:	%{name}.protocol
+Obsoletes:	%name-11x
 %if %build_speechd
 Suggests:	speech-dispatcher
 %endif
 %if %build_g15
 Suggests:	g15daemon
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
+# Strange, but true: We actually do require several different
+# versions of the same library (celt) installed at the same time.
+# The reason is that they're API/ABI compatible, but bitstream
+# incompatible, releases - mumble dlopens any celt library it can
+# find to support their bitstream versions.
+# Since a lot of Mumble users are on legacy celt (0.7.x) [that's
+# what Ubuntu ships], it is necessary to have that version
+# installed to talk to those users.
+Requires: %mklibname celt0_ 0
+Requires: %mklibname celt0_ 1
+Requires: %mklibname celt0_ 2
 
 %description
 Low-latency, high-quality voice communication for gamers.
@@ -80,15 +99,6 @@ Includes game linking, so voice from other players comes
 from the direction of their characters, and has echo 
 cancellation so the sound from your loudspeakers won't be 
 audible to other players.
-
-%package 11x
-Summary:	The 1.1.x compatible client for mumble
-Group:		Sound
-Requires:	%{name} = %{version}-%{release}
-
-%description 11x
-This package provides the 1.1.x compatible client for Mumble, used
-to connect to older servers.
 
 %if %mdkversion < 200910
 %package protocol-kde3
@@ -153,7 +163,12 @@ This package contains the web scripts for mumble-server.
 %endif
 
 %prep
+%if "%git" != ""
+%setup -q -c %name
+%else
 %setup -q
+%endif
+%patch0 -p1 -b .celt11~
 cp -p %{SOURCE4} README.install.urpmi
 
 %build
@@ -198,9 +213,6 @@ install -d -m 0755 %{buildroot}%{_libdir}/%{name}/plugins
 cp -Pp release/libmumble* %{buildroot}%{_libdir}/%{name}/
 cp -p release/plugins/liblink.so %{buildroot}%{_libdir}/%{name}/
 
-# ---Mumble 11X ---
-install -D -m 0755 release/%{name}11x %{buildroot}%{_bindir}/%{name}11x
-
 # Mumble icons
 install -D -m 0644 icons/%{name}.svg %{buildroot}%{_iconsdir}/hicolor/scalable/apps/%{name}.svg
 
@@ -210,12 +222,6 @@ install -m 0644 scripts/%{name}.desktop %{buildroot}%{_datadir}/applications/%{n
 desktop-file-install \
 		     --remove-category="Qt" \
 		     --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
-
-# Create a Mumble11x desktop file from the Mumble one
-sed -e "s/Name\=Mumble/Name\=Mumble-11x/g" \
-	-e "s/Exec\=mumble/Exec\=mumble11x/g" \
-	%{buildroot}%{_datadir}/applications/%{name}.desktop \
-	> %{buildroot}%{_datadir}/applications/%{name}11x.desktop
 %endif
 
 %if %build_server
@@ -316,12 +322,6 @@ fi
 %{_iconsdir}/hicolor/*/apps/%{name}.svg
 %{_mandir}/man1/%{name}.*
 %{_mandir}/man1/%{name}-overlay.*
-
-%files 11x
-%defattr(-,root,root,-)
-%{_bindir}/%{name}11x
-%{_datadir}/applications/%{name}11x.desktop
-%{_mandir}/man1/%{name}11x.*
 
 %if %mdkversion < 200910
 %files protocol-kde3
