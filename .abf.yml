@@ -1,8 +1,0 @@
-sources:
-  "mumble-20120422.tar.xz:"	bded2349b87387b14b4bae5152955901e430b320
-  "mumble-server.ini:"	da59f299664ee5d08c814e53f57d2049b89ac11e
-  "mumble-server-init.mdv:"	42f0cf21286be48bf4f669527a24eb29c26c89ef
-  "mumble-server.logrotate:"	e60d77843dc57d18b03f04f37899b56d2d6428fe
-  "mumble-server-web.conf:"	afb627d5bc38b1478a9471fe059b9dc9cba08eee
-  "MurmurPHP.ini:"	81b2851c6fb14d9d49d0f226989dbf4fc08552dd
-  "README.install.urpmi.mumble-server-web:"	d8da737627df5636e48abbd157c11fe5ae570158

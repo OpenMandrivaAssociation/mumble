@@ -1,0 +1,15 @@
+			************
+
+To use the mumble web server, you need apache running (httpd service),
+and to reload/restart it (service httpd reload or restart).
+
+Then you can go to the followings URLs :
+
+http://localhost/cgi-bin/mumble-server/weblist.cgi
+
+http://localhost/cgi-bin/mumble-server/register.cgi
+
+You will have to have to modify your configuration file to access to
+the registration feature. 
+
+			*************

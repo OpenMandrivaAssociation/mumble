@@ -51,15 +51,15 @@ Patch0:		mumble-1.2.4-celt-0.11.1.patch
 Buildrequires:	kde3-macros
 %endif 
 Buildrequires:	kde4-macros
-BuildRequires:	libspeex-devel
+BuildRequires:	pkgconfig(speex) >= 1.2
 BuildRequires:	pkgconfig(celt) >= 0.11.1
 BuildRequires:	qt4-devel >= 4.4.1
 BuildRequires:	boost-devel
-BuildRequires:	pulseaudio-devel
-BuildRequires:	libalsa-devel
-BuildRequires:	libogg-devel
-BuildRequires:	openssl-devel
-BuildRequires:	libxevie-devel
+BuildRequires:	pkgconfig(libpulse)
+BuildRequires:	pkgconfig(alsa)
+BuildRequires:	pkgconfig(ogg)
+BuildRequires:	pkgconfig(libssl)
+BuildRequires:	pkgconfig(xevie)
 BuildRequires:	qt4-linguist >= 4.4.1
 BuildRequires:	protobuf-devel
 BuildRequires:	protobuf-compiler
@@ -368,3 +368,107 @@ fi
 %config(noreplace) %{_sysconfdir}/php.d/MurmurPHP.ini
 %{_datadir}/%{name}-server-web
 %endif
+
+
+%changelog
+* Mon Apr 23 2012 Bernhard Rosenkraenzer <bero@bero.eu> 1.2.4-0.20120422.1
++ Revision: 792741
+- Adjust BuildRequires: lines
+- Update to current 1.2.4 git (lots of bugfixes, little else)
+- Require all useful versions of celt for interoperability
+
+* Sun Apr 17 2011 Tomasz Pawel Gajc <tpg@mandriva.org> 1.2.3-1
++ Revision: 654716
+- update to new version 1.2.3
+- drop patch 0 and 1
+
+* Mon Dec 06 2010 Oden Eriksson <oeriksson@mandriva.com> 1.2.2-3mdv2011.0
++ Revision: 612967
+- the mass rebuild of 2010.1 packages
+
+* Mon Apr 19 2010 Funda Wang <fwang@mandriva.org> 1.2.2-2mdv2010.1
++ Revision: 536611
+- fix linkage
+
+* Sat Feb 20 2010 Tomasz Pawel Gajc <tpg@mandriva.org> 1.2.2-1mdv2010.1
++ Revision: 508809
+- update to new version 1.2.2
+- drop patch 1
+
+* Sun Jan 31 2010 Jérôme Brenier <incubusss@mandriva.org> 1.2.1-2mdv2010.1
++ Revision: 498747
+- rebuild for new protobuf
+
+* Sun Jan 10 2010 Jérôme Brenier <incubusss@mandriva.org> 1.2.1-1mdv2010.1
++ Revision: 489126
+- new version 1.2.1
+- rediff Patch0
+- add Patch1 from upstream to fix a database upgrade problem
+
+* Fri Dec 18 2009 Jérôme Brenier <incubusss@mandriva.org> 1.2.0-3mdv2010.1
++ Revision: 479861
+- fix SIGHUP syntax in the initscript (bluca)
+- provide a logrotate file adapted to mandriva (spotted by bluca)
+- add pidfile directory (thanks to bluca)
+- drop /etc/default/mumble-server
+- add an option not to build clients (thanks to bluca)
+
+* Mon Dec 14 2009 Jérôme Brenier <incubusss@mandriva.org> 1.2.0-2mdv2010.1
++ Revision: 478633
+- revert to make -j2
+- BR celt-devel >= 0.7.0
+- re-enable parallel compilation
+
+* Fri Dec 11 2009 Jérôme Brenier <incubusss@mandriva.org> 1.2.0-1mdv2010.1
++ Revision: 476275
+- final version 1.2.0
+
+* Wed Dec 02 2009 Jérôme Brenier <incubusss@mandriva.org> 1.2.0-0.beta2.1mdv2010.1
++ Revision: 472480
+- update to 1.2.0~beta2
+
+* Wed Nov 18 2009 Jérôme Brenier <incubusss@mandriva.org> 1.2.0-0.beta1.1mdv2010.1
++ Revision: 467286
+- BuildRequires : avahi-compat-libdns_sd-devel
+- new version 1.2.0~beta1
+- rediff P0
+- new subpackage mumble11x (client compatible with 1.1.x servers)
+- build with now available speech-dispatcher
+- build with celt (BR celt-devel)
+- BR protobuf-devel and protobuf-compiler
+- liblink.so now in %%{_libdir}/mumble
+- fix icon
+
+  + Michael Scherer <misc@mandriva.org>
+    - mark /etc/mumble-server.ini as a config file
+
+* Thu May 28 2009 Jérôme Brenier <incubusss@mandriva.org> 1.1.8-1mdv2010.0
++ Revision: 380670
+- add a BR on libogg-devel
+- add a missing Requires (plugins subpackage)
+- update to new version 1.1.8
+- put plugins into a plugins sub-package instead of a lib one
+- add Provides/Obsoletes on former sub-packages
+- str fmt patch rediffed
+- fixsegfault patch dropped (merged in new sources)
+- fix license
+
+* Fri Mar 13 2009 Stéphane Téletchéa <steletch@mandriva.org> 1.1.7-2mdv2009.1
++ Revision: 354526
+- Add segfault fix, fixes bug #48490
+
+* Thu Feb 26 2009 Tomasz Pawel Gajc <tpg@mandriva.org> 1.1.7-1mdv2009.1
++ Revision: 345270
+- spec clean
+- update to new version 1.1.7
+- use complete new spec file from incubusss, with some modifications made by me (mdvbz #40902)
+- add sources
+- add source and spec file
+- Created package structure for mumble.
+
+  + Pixel <pixel@mandriva.com>
+    - rpm filetriggers deprecates update_menus/update_scrollkeeper/update_mime_database/update_icon_cache/update_desktop_database/post_install_gconf_schemas
+
+  + Michael Scherer <misc@mandriva.org>
+    - add missing BuildRequires
+
