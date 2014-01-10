@@ -4,7 +4,7 @@
 # configuration options for the client
 %define build_client 1
 %define build_speechd 1
-%define build_g15 1
+%define build_g15 0
 
 %define git 20120422
 
