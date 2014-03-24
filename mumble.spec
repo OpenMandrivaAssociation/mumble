@@ -65,6 +65,7 @@ BuildRequires:	protobuf-devel
 BuildRequires:	protobuf-compiler
 BuildRequires:	avahi-compat-libdns_sd-devel
 BuildRequires:	pkgconfig(xi) >= 1.6.0
+BuildRequires:	pkgconfig(sndfile)
 %if %build_speechd
 BuildRequires:	speech-dispatcher-devel
 %endif
