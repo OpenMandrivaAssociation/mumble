@@ -46,6 +46,7 @@ Source3:	MurmurPHP.ini
 Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
 Source6:	%{name}-server.logrotate
+Source100:	mumble.rpmlintrc
 Patch0:		mumble-1.2.4-celt-0.11.1.patch
 Patch1:		0001-use-std-max-instead-of-MAX.patch
 BuildRequires:	kde4-macros
