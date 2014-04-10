@@ -6,7 +6,7 @@
 %define build_speechd 1
 %define build_g15 0
 
-%define git 20120422
+%define git %{nil}
 
 %{?_without_server: %{expand: %%global build_server 0}}
 %{?_without_server: %{expand: %%global build_ice 0}}
@@ -28,7 +28,7 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.2.4
+Version:	1.2.5
 %if "%git" != ""
 Release:	0.%git.2
 Source0:	%name-%git.tar.xz
@@ -48,9 +48,6 @@ Source5:	%{name}-server-init.mdv
 Source6:	%{name}-server.logrotate
 Patch0:		mumble-1.2.4-celt-0.11.1.patch
 Patch1:		0001-use-std-max-instead-of-MAX.patch
-%if %mdkversion < 200910
-Buildrequires:	kde3-macros
-%endif 
 BuildRequires:	kde4-macros
 BuildRequires:	pkgconfig(speex) >= 1.2
 BuildRequires:	pkgconfig(celt) >= 0.11.1
@@ -94,7 +91,6 @@ Suggests:	g15daemon
 # what Ubuntu ships], it is necessary to have that version
 # installed to talk to those users.
 Requires: %mklibname celt0_ 0
-Requires: %mklibname celt0_ 1
 Requires: %mklibname celt0_ 2
 
 %description
@@ -104,16 +100,6 @@ Includes game linking, so voice from other players comes
 from the direction of their characters, and has echo 
 cancellation so the sound from your loudspeakers won't be 
 audible to other players.
-
-%if %mdkversion < 200910
-%package protocol-kde3
-Summary:	The mumble protocol for KDE3
-Group:		Graphical desktop/KDE
-Requires:	%{name} = %{version}-%{release}
-
-%description protocol-kde3
-The mumble protocol for KDE3.
-%endif
 
 %package protocol-kde4
 Summary:	The mumble protocol for KDE4
@@ -212,9 +198,6 @@ rm -rf %{buildroot}
 install -D -m 0755 release/%{name} %{buildroot}%{_bindir}/%{name}
 install -m 0755 scripts/%{name}-overlay %{buildroot}%{_bindir}/%{name}-overlay
 install -D -m 0755 scripts/%{name}.protocol %{buildroot}%{_kde_datadir}/kde4/services/%{name}.protocol
-%if %mdkversion < 200910
-install -D -m 0755 scripts/%{name}.protocol %{buildroot}%{_kde3_datadir}/kde3/services/%{name}.protocol
-%endif
 install -d -m 0755 %{buildroot}%{_libdir}/%{name}/plugins
 cp -Pp release/libmumble* %{buildroot}%{_libdir}/%{name}/
 cp -p release/plugins/liblink.so %{buildroot}%{_libdir}/%{name}/
@@ -284,22 +267,6 @@ install -m 0644 man/mumble* %{buildroot}%{_mandir}/man1
 %clean
 rm -rf %{buildroot}
 
-%if %build_client
-%if %mdkversion < 200900
-%post
-%{update_menus}
-%update_desktop_database
-%update_icon_cache hicolor
-%endif
-
-%if %mdkversion < 200900
-%postun
-%{clean_menus}
-%clean_desktop_database
-%clean_icon_cache hicolor
-%endif
-%endif
-
 %if %build_server
 %pre server
 %_pre_useradd %{name}-server %{_var}/lib/%{name}-server /bin/sh
@@ -328,12 +295,6 @@ fi
 %{_iconsdir}/hicolor/*/apps/%{name}.svg
 %{_mandir}/man1/%{name}.*
 %{_mandir}/man1/%{name}-overlay.*
-
-%if %mdkversion < 200910
-%files protocol-kde3
-%defattr(-,root,root)
-%{_kde3_datadir}/kde3/services/%{name}.protocol
-%endif
 
 %files protocol-kde4
 %defattr(-,root,root)
