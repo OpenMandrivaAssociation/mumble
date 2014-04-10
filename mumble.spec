@@ -67,6 +67,7 @@ BuildRequires:	avahi-compat-libdns_sd-devel
 BuildRequires:	pkgconfig(xi) >= 1.6.0
 BuildRequires:	pkgconfig(sndfile)
 BuildRequires:	pkgconfig(libcap-ng)
+BuildRequires:	cap-devel
 %if %build_speechd
 BuildRequires:	speech-dispatcher-devel
 %endif
