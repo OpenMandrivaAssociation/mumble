@@ -9,7 +9,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.2.8
-Release:	1
+Release:	2
 License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
@@ -21,6 +21,7 @@ Source3:	MurmurPHP.ini
 Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
 Source6:	%{name}-server.logrotate
+Source7:        %{name}-tmpfiles.conf
 Source100:	mumble.rpmlintrc
 Patch0:		mumble-1.2.4-celt-0.11.1.patch
 Patch1:		0001-use-std-max-instead-of-MAX.patch
@@ -142,6 +143,7 @@ This package provides Murmur, the VOIP server for Mumble.
 %{_bindir}/murmur-user-wrapper
 %{_sbindir}/murmurd
 %{_initrddir}/%{name}-server
+%{_tmpfilesdir}/%{name}-server.conf
 %config(noreplace) %{_sysconfdir}/%{name}-server.ini
 %{_sysconfdir}/logrotate.d/%{name}-server
 %{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
@@ -159,6 +161,7 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %post server
 %_post_service %{name}-server
+%tmpfiles_create %{_tmpfilesdir}/%{name}-server
 %__service messagebus reload
 
 %preun server
@@ -276,6 +279,9 @@ install -d -m0755 %{buildroot}%{_var}/lib/%{name}-server
 
 # create log directory
 install -d -m0755 %{buildroot}%{_var}/log/%{name}-server
+
+# create tmpfiles directory
+install -D -p -m 0644 %{SOURCE7} %{buildroot}%{_tmpfilesdir}/%{name}-server.conf
 
 # create pidfile directory
 install -d -m0755 %{buildroot}%{_var}/run/%{name}-server
