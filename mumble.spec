@@ -8,12 +8,12 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.2.8
-Release:	3
+Version:	1.2.9
+Release:	1
 License:	BSD-like
 Group:		Sound
 Url:		http://mumble.sourceforge.net/
-Source0:	http://downloads.sourceforge.net/mumble/%{name}-%{version}.tar.gz
+Source0:	https://sourceforge.net/projects/mumble/files/Mumble/%{version}/%{name}-%{version}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
 Source2:	%{name}-server-web.conf
