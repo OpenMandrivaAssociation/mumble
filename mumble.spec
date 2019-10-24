@@ -195,12 +195,10 @@ export CC=gcc
 export CXX=g++
 
 %qmake_qt5 main.pro \
+	CONFIG+=no-ice \
 #	LIBS+="-lpng16 -lfreetype -lXrender -lfontconfig -lGL"
 %if %build_server == 0
 	CONFIG+=no-server \
-%endif
-%if %build_ice == 0
-	CONFIG+=no-ice \
 %endif
 %if %build_client == 0
 	CONFIG+=no-client \
