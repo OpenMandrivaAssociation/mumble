@@ -261,7 +261,7 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}-server.ini
 
 %if %build_ice
 # install Mumur.ice  in /usr/share/slice
-install -D -m 0755 src/murmur/Murmur.ice %{buildroot}%{_datadir}/slice/Murmur.ice
+#install -D -m 0755 src/murmur/Murmur.ice %{buildroot}%{_datadir}/slice/Murmur.ice
 %endif
 
 # install initscript
