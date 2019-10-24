@@ -53,6 +53,7 @@ Patch3:		mumble-1.3.0-celt071-AudioInput.patch
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
 BuildRequires:	cmake(ECM)
+BuildRequires:	cmake(Qt5LinguistTools)
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Gui)
