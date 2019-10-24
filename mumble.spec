@@ -46,7 +46,7 @@ Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?pr
 #Patch1:		mumble-1.2.3-fdr-logrotate.patch
 # Fix broken celt-0.11.3 (uncompatible with mumble) mga#12853
 #Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
-Patch3:		mumble-1.3.0-mga-celt071-AudioInput.patch
+Patch3:		mumble-1.3.0-celt071-AudioInput.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
