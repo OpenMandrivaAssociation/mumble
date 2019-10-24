@@ -83,6 +83,7 @@ BuildRequires:	pkgconfig(sndfile)
 BuildRequires:	pkgconfig(opus)
 BuildRequires:	pkgconfig(xi) >= 1.6.0
 BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(dri)
 
 %if %build_speechd
 BuildRequires:	pkgconfig(speech-dispatcher)
