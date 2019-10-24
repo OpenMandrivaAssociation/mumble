@@ -7,7 +7,7 @@
 # configuration options for the client
 %define build_client	1
 %define build_speechd	1
-%define build_g15	0
+%define build_g15	1
 
 %{?_without_server:	%{expand: %%global build_server 0}}
 %{?_without_server:	%{expand: %%global build_ice 0}}
