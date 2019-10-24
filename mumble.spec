@@ -189,8 +189,8 @@ export CC=gcc
 export CXX=g++
 
 %qmake_qt5 main.pro \
-	QMAKE_CFLAGS_RELEASE="%{optflags} -Wall -fno-strict-aliasing" \
-  	QMAKE_CXXFLAGS_RELEASE="%{optflags} -Wall -fno-strict-aliasing" \
+	QMAKE_CFLAGS_RELEASE="%{optflags} -lGL -Wall -fno-strict-aliasing" \
+  	QMAKE_CXXFLAGS_RELEASE="%{optflags} -lGL -Wall -fno-strict-aliasing" \
 %if %build_server == 0
 	CONFIG+=no-server \
 %endif
