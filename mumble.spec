@@ -25,33 +25,28 @@
 %{?_without_g15:	%{expand: %%global build_g15 0}}
 %{?_with_g15:		%{expand: %%global build_g15 1}}
 
-# comment out if not a pre-release
-%define prel	rc2
-# bump the rel
-%define rel	1
-
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.3.0
-Release:	%mkrel %{?prel:0.%prel.}%{rel}
+Release:	1
 License:	BSD
 Group:		Communications/Telephony
 Url:		http://mumble.sourceforge.net/
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
 # conf files courtesy of debian package
-Source1:	%{name}-server.ini
-Source2:	%{name}-server-web.conf
-Source3:	MurmurPHP.ini
-Source4:	README.install.urpmi.mumble-server-web
-Source5:	%{name}-server-init.mdv
-Source6:	%{name}-server.logrotate
-Source7:	%{name}-tmpfiles.conf
-Patch0:		mumble-1.3.0-mga-celt071_include_dir.patch
+#Source1:	%{name}-server.ini
+#Source2:	%{name}-server-web.conf
+#Source3:	MurmurPHP.ini
+#Source4:	README.install.urpmi.mumble-server-web
+#Source5:	%{name}-server-init.mdv
+#Source6:	%{name}-server.logrotate
+#Source7:	%{name}-tmpfiles.conf
+#Patch0:		mumble-1.3.0-mga-celt071_include_dir.patch
 # Fix broken logrotate script (start-stop-daemon not available anymore), BZ 730129
-Patch1:		mumble-1.2.3-fdr-logrotate.patch
+#Patch1:		mumble-1.2.3-fdr-logrotate.patch
 # Fix broken celt-0.11.3 (uncompatible with mumble) mga#12853
-Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
-Patch3:		mumble-1.3.0-mga-celt071-AudioInput.patch
+#Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
+#Patch3:		mumble-1.3.0-mga-celt071-AudioInput.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
@@ -181,7 +176,7 @@ This package contains the web scripts for mumble-server.
 %setup -q
 %autopatch -p1
 
-cp -p %{SOURCE4} README.install.urpmi
+#cp -p %{SOURCE4} README.install.urpmi
 
 %build
 %qmake_qt5 main.pro \
