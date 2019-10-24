@@ -85,6 +85,7 @@ BuildRequires:	pkgconfig(xi) >= 1.6.0
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(dri)
 BuildRequires:	pkgconfig(glu)
+BuildRequires:	egl-devel
 
 %if %build_speechd
 BuildRequires:	pkgconfig(speech-dispatcher)
@@ -191,7 +192,7 @@ export CC=gcc
 export CXX=g++
 
 %qmake_qt5 main.pro \
-	LIBS+="-lpng16 -lfreetype -lXrender -lfontconfig -lGL"
+#	LIBS+="-lpng16 -lfreetype -lXrender -lfontconfig -lGL"
 %if %build_server == 0
 	CONFIG+=no-server \
 %endif
