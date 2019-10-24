@@ -54,6 +54,7 @@ BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
+BuildRequires:	qt5-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Gui)
