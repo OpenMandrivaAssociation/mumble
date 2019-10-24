@@ -1,0 +1,14 @@
+diff -Nrup a/src/mumble/AudioInput.cpp b/src/mumble/AudioInput.cpp
+--- a/src/mumble/AudioInput.cpp	2019-03-17 21:20:36.000000000 +0100
++++ b/src/mumble/AudioInput.cpp	2019-04-03 08:54:14.737214708 +0200
+@@ -26,6 +26,10 @@ extern "C" {
+ }
+ #endif
+ 
++#ifndef CELT_SET_VBR_RATE
++#define CELT_SET_VBR_RATE CELT_SET_BITRATE
++#endif
++
+ // Remember that we cannot use static member classes that are not pointers, as the constructor
+ // for AudioInputRegistrar() might be called before they are initialized, as the constructor
+ // is called from global initialization.
