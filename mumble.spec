@@ -184,6 +184,9 @@ This package contains the web scripts for mumble-server.
 #cp -p %{SOURCE4} README.install.urpmi
 
 %build
+export CC=gcc
+export CXX=g++
+
 %qmake_qt5 main.pro \
 %if %build_server == 0
 	CONFIG+=no-server \
