@@ -1,11 +1,11 @@
 # configuration options for the server (murmur)
 %define build_server	1
 %define build_web	1
-%define build_ice	1
+%define build_ice	0
 # configuration options for the client
 %define build_client	1
 %define build_speechd	1
-%define build_g15	1
+%define build_g15	0
 
 %{?_without_server:	%{expand: %%global build_server 0}}
 %{?_without_server:	%{expand: %%global build_ice 0}}
@@ -50,7 +50,7 @@ Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?pr
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
-BuildRequires:	kf5-macros
+BuildRequires:	cmake(ECM)
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Gui)
@@ -63,12 +63,15 @@ BuildRequires:	pkgconfig(Qt5Xml)
 BuildRequires:	boost-devel
 BuildRequires:	protobuf-compiler
 BuildRequires:	pkgconfig(avahi-compat-libdns_sd)
-BuildRequires:	pkgconfig(grpc)
+# NOT YET IN OMV
+#BuildRequires:	pkgconfig(grpc)
 BuildRequires:	pkgconfig(libcap)
 BuildRequires:	pkgconfig(protobuf)
 BuildRequires:	pkgconfig(speex) >= 1.2
 BuildRequires:	pkgconfig(speexdsp)
-BuildRequires:	pkgconfig(celt071)
+# NOT YET IN OMV
+#BuildRequires:	pkgconfig(celt071)
+BuildRequires:	pkgconfig(celt)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(ogg)
