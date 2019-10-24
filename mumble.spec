@@ -84,6 +84,7 @@ BuildRequires:	pkgconfig(opus)
 BuildRequires:	pkgconfig(xi) >= 1.6.0
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(dri)
+BuildRequires:	pkgconfig(glu)
 
 %if %build_speechd
 BuildRequires:	pkgconfig(speech-dispatcher)
@@ -190,8 +191,7 @@ export CC=gcc
 export CXX=g++
 
 %qmake_qt5 main.pro \
-	QMAKE_CFLAGS_RELEASE="%{optflags} -lGL -Wall -fno-strict-aliasing" \
-  	QMAKE_CXXFLAGS_RELEASE="%{optflags} -lGL -Wall -fno-strict-aliasing" \
+	LIBS+="-lpng16 -lfreetype -lXrender -lfontconfig -lGL"
 %if %build_server == 0
 	CONFIG+=no-server \
 %endif
