@@ -1,0 +1,10 @@
+/var/log/mumble-server/mumble-server.log {
+	weekly
+	rotate 7
+	compress
+	delaycompress
+	missingok
+	postrotate
+		[ -f /run/mumble-server/mumble-server.pid ] &&  kill -HUP `cat /run/mumble-server/mumble-server.pid` || true
+	endscript
+}
