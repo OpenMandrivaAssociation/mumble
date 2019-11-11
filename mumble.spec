@@ -333,7 +333,7 @@ install -m 0644 man/mumble* %{buildroot}%{_mandir}/man1
 %{_mandir}/man1/%{name}-overlay.*
 
 %files protocol-plasma5
-%{_kf5_services}/%{name}.protocol
+#{_kf5_services}/%{name}.protocol
 
 %files plugins
 %{_libdir}/%{name}
