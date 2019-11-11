@@ -363,7 +363,7 @@ install -m 0644 man/mumble* %{buildroot}%{_mandir}/man1
 
 %if %build_web
 %files server-web
-%doc README.install.urpmi
+#doc README.install.urpmi
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}-server-web.conf
 %if %build_ice
 %config(noreplace) %{_sysconfdir}/php.d/MurmurPHP.ini
