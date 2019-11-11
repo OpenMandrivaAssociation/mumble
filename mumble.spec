@@ -103,7 +103,12 @@ BuildRequires:	g15daemon_client-devel
 # The 0.11 version can work if the clients (and presumably the server) all
 # support it.
 # Using mklibname is not ideal but it's the easiest option for now
-Requires:	%{mklibname celt 071 0}
+#Requires:	%{mklibname celt 071 0}
+
+#We try to use bundled Celt 0.7 and 0.11
+
+# For sanity, add as dep celt
+Requires:	celt
 
 Requires:	qt5-database-plugin-sqlite
 Requires:	%{name}-plugins = %{version}-%{release}
