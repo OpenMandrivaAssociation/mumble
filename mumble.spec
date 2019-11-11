@@ -211,7 +211,7 @@ export CXX=g++
 %endif
 	CONFIG+=grpc \
 	CONFIG+=no-bundled-speex \
-	CONFIG+=no-bundled-celt \
+	#CONFIG+=no-bundled-celt \
 	CONFIG+=no-bundled-opus \
 	CONFIG+=no-embed-qt-translations \
 	CONFIG+=no-update \
