@@ -36,13 +36,13 @@ Group:		Communications/Telephony
 Url:		http://mumble.sourceforge.net/
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
 # conf files courtesy of debian package
-#Source1:	%{name}-server.ini
-#Source2:	%{name}-server-web.conf
-#Source3:	MurmurPHP.ini
+Source1:	%{name}-server.ini
+Source2:	%{name}-server-web.conf
+Source3:	MurmurPHP.ini
 #Source4:	README.install.urpmi.mumble-server-web
-#Source5:	%{name}-server-init.mdv
-#Source6:	%{name}-server.logrotate
-#Source7:	%{name}-tmpfiles.conf
+Source5:	%{name}-server-init.mdv
+Source6:	%{name}-server.logrotate
+Source7:	%{name}-tmpfiles.conf
 #Patch0:		mumble-1.3.0-mga-celt071_include_dir.patch
 # Fix broken logrotate script (start-stop-daemon not available anymore), BZ 730129
 #Patch1:		mumble-1.2.3-fdr-logrotate.patch
