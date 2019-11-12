@@ -1,4 +1,4 @@
-%define _disable_lto 1
+#define _disable_lto 1
 
 # configuration options for the server (murmur)
 %define build_server	1
