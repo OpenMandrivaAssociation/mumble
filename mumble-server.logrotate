@@ -5,6 +5,6 @@
 	delaycompress
 	missingok
 	postrotate
-		[ -f /var/run/mumble-server/mumble-server.pid ] &&  kill -HUP `cat /var/run/mumble-server/mumble-server.pid` || true
+		[ -f /run/mumble-server/mumble-server.pid ] &&  kill -HUP `cat /run/mumble-server/mumble-server.pid` || true
 	endscript
 }

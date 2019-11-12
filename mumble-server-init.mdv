@@ -6,8 +6,8 @@
 # Provides:             mumble-server
 # Required-Start:       $network $local_fs $remote_fs messagebus
 # Required-Stop:	$network $local_fs $remote_fs messagebus
-# Should-Start:		$mysql
-# Should-Stop:		$mysql
+# Should-Start:		mysqld
+# Should-Stop:		mysqld
 # Default-Start:        2 3 4 5
 # Default-Stop:         0 1 6
 # Short-Description:    Mumble VoIP Server
@@ -20,7 +20,7 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 NAME=mumble-server
 LOCK_FILE=/var/lock/subsys/$NAME
-PID_FILE=/var/run/$NAME/$NAME.pid
+PID_FILE=/run/$NAME/$NAME.pid
 DAEMON=/usr/sbin/murmurd
 USER=mumble-server
 

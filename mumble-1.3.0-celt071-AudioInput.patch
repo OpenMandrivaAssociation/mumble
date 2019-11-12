@@ -1,7 +1,8 @@
---- mumble-1.2.4/src/mumble/AudioInput.cpp.bero	2012-04-22 22:54:13.627406284 +0200
-+++ mumble-1.2.4/src/mumble/AudioInput.cpp	2012-04-22 22:54:37.389406824 +0200
-@@ -47,6 +47,10 @@
- #include "opus.h"
+diff -Nrup a/src/mumble/AudioInput.cpp b/src/mumble/AudioInput.cpp
+--- a/src/mumble/AudioInput.cpp	2019-03-17 21:20:36.000000000 +0100
++++ b/src/mumble/AudioInput.cpp	2019-04-03 08:54:14.737214708 +0200
+@@ -26,6 +26,10 @@ extern "C" {
+ }
  #endif
  
 +#ifndef CELT_SET_VBR_RATE

@@ -1,0 +1,11 @@
+--- mumble-1.3.0.old/overlay_gl/overlay_gl.pro	2019-03-17 21:20:36.000000000 +0100
++++ mumble-1.3.0/overlay_gl/overlay_gl.pro	2019-06-01 21:46:30.386413963 +0200
+@@ -22,7 +22,7 @@ unix:!macx {
+ 
+   DEFINES += TARGET_UNIX
+   linux* {
+-    LIBS *= -lrt -ldl
++    LIBS *= -lrt -ldl -lGL
+   }
+   QMAKE_CFLAGS *= -fvisibility=hidden $(CFLAGS_ADD)
+   QMAKE_LFLAGS -= -Wl,--no-undefined
