@@ -35,6 +35,7 @@ License:	BSD
 Group:		Communications/Telephony
 Url:		http://mumble.sourceforge.net/
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
+Patch0:		mumble-1.3.1-openssl3.patch
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
 Source2:	%{name}-server-web.conf
@@ -76,7 +77,7 @@ BuildRequires:	pkgconfig(speex) >= 1.2
 BuildRequires:	pkgconfig(speexdsp)
 # NOT YET IN OMV
 #BuildRequires:	pkgconfig(celt071)
-BuildRequires:	pkgconfig(celt)
+#BuildRequires:	pkgconfig(celt)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(ogg)
