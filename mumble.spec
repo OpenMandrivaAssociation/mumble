@@ -29,7 +29,7 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.3.1
+Version:	1.3.2
 Release:	1
 License:	BSD
 Group:		Communications/Telephony
