@@ -54,6 +54,7 @@ Source7:	%{name}-tmpfiles.conf
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
+BuildRequires:	cmake
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
 BuildRequires:	qt5-qttranslations
@@ -197,36 +198,36 @@ This package contains the web scripts for mumble-server.
 #cp -p %{SOURCE4} README.install.urpmi
 
 %build
-#export CC=gcc
-#export CXX=g++
+%cmake
 
-%qmake_qt5 main.pro \
-	CONFIG+=no-ice \
-#	LIBS+="-lpng16 -lfreetype -lXrender -lfontconfig -lGL"
-%if %build_server == 0
-	CONFIG+=no-server \
-%endif
-%if %build_client == 0
-	CONFIG+=no-client \
-%endif
-%if %build_speechd == 0
-	CONFIG+=no-speechd \
-%endif
-%if %build_g15 == 0
-	CONFIG+=no-g15 \
-%endif
-	CONFIG+=grpc \
-	CONFIG+=no-bundled-speex \
-	#CONFIG+=no-bundled-celt \
-	CONFIG+=no-bundled-opus \
-	CONFIG+=no-embed-qt-translations \
-	CONFIG+=no-update \
-	DEFINES+=PLUGIN_PATH=%{_libdir}/%{name} \
-	DEFINES+=DEFAULT_SOUNDSYSTEM=PulseAudio
-
-%{_qt5_bindir}/lrelease src/mumble/*.ts
 %make_build
-
+#%qmake_qt5 main.pro \
+#	CONFIG+=no-ice \
+#	LIBS+="-lpng16 -lfreetype -lXrender -lfontconfig -lGL"
+#%if %build_server == 0
+#	CONFIG+=no-server \
+#%endif
+#%if %build_client == 0
+#	CONFIG+=no-client \
+#%endif
+#%if %build_speechd == 0
+#	CONFIG+=no-speechd \
+#%endif
+#%if %build_g15 == 0
+#	CONFIG+=no-g15 \
+#%endif
+#	CONFIG+=grpc \
+#	CONFIG+=no-bundled-speex \
+#	#CONFIG+=no-bundled-celt \
+#	CONFIG+=no-bundled-opus \
+#	CONFIG+=no-embed-qt-translations \
+#	CONFIG+=no-update \
+#	DEFINES+=PLUGIN_PATH=%{_libdir}/%{name} \
+#	DEFINES+=DEFAULT_SOUNDSYSTEM=PulseAudio
+#
+#%{_qt5_bindir}/lrelease src/mumble/*.ts
+#%make_build
+#
 %install
 %if %build_client
 # --- Mumble install ---
