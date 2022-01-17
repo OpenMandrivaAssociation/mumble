@@ -29,13 +29,13 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.3.4
-Release:	3
+Version:	1.4.230
+Release:	1
 License:	BSD
 Group:		Communications/Telephony
 Url:		http://mumble.sourceforge.net/
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
-Patch0:		mumble-1.3.1-openssl3.patch
+#Patch0:		mumble-1.3.1-openssl3.patch
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
 Source2:	%{name}-server-web.conf
