@@ -59,6 +59,7 @@ BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
 BuildRequires:	qt5-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
+BuildRequires:	pkgconfig(Qt5Concurrent)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Gui)
 BuildRequires:	pkgconfig(Qt5Help)
@@ -67,6 +68,7 @@ BuildRequires:	pkgconfig(Qt5Sql)
 BuildRequires:	pkgconfig(Qt5Svg)
 BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	pkgconfig(Qt5Xml)
+BuildRequires:	pkgconfig(python)
 BuildRequires:	boost-devel
 BuildRequires:	protobuf-compiler
 BuildRequires:	pkgconfig(avahi-compat-libdns_sd)
