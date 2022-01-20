@@ -194,8 +194,7 @@ This package contains the web scripts for mumble-server.
 %endif
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -n %{name}-%{version}.src -p1
 
 #cp -p %{SOURCE4} README.install.urpmi
 
