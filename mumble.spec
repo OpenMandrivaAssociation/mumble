@@ -204,7 +204,8 @@ This package contains the web scripts for mumble-server.
 
 %build
 %cmake \
-	-Dice=off
+	-Dice=off \
+	-Doverlay-xcompile=off
 
 %make_build
 #%qmake_qt5 main.pro \
