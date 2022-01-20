@@ -83,6 +83,7 @@ BuildRequires:	pkgconfig(speexdsp)
 # NOT YET IN OMV
 #BuildRequires:	pkgconfig(celt071)
 #BuildRequires:	pkgconfig(celt)
+BuildRequires:  pkgconfig(ice)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(ogg)
