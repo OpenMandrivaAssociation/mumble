@@ -69,6 +69,7 @@ BuildRequires:	pkgconfig(Qt5Sql)
 BuildRequires:	pkgconfig(Qt5Svg)
 BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	pkgconfig(Qt5Xml)
+BuildRequires:  pkgconfig(expat)
 BuildRequires:	pkgconfig(python)
 BuildRequires:	boost-devel
 BuildRequires:	protobuf-compiler
