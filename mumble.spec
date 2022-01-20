@@ -57,6 +57,7 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	cmake
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
+BuildRequires:	cmake(Poco)
 BuildRequires:	qt5-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5Concurrent)
