@@ -103,7 +103,7 @@ Group:		Communications/Telephony
 Requires(post):	systemd >= %{systemd_required_version}
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
-Requires(preun):	rpm-helper
+Requires(preun): rpm-helper
 
 # Currently ice source is dropped in Cooker. Let's enable it when package brack to repo (angry.p)
 # keep ice-devel, pkgconfig(ice) is not the same ice devel pkg
@@ -116,19 +116,6 @@ Requires:	dbus
 
 %description	server
 This package provides Murmur, the VOIP server for Mumble.
-
-%package	server-web
-Summary:	Web scripts for mumble-server
-Group:		Communications/Telephony
-Requires:	apache
-Requires:	perl-CGI
-Requires:	mail-server
-
-#Requires:	ice
-Requires:	%{name}-server = %{version}-%{release}
-
-%description	server-web
-This package contains the web scripts for mumble-server.
 
 %prep
 %autosetup -n %{name}-%{version}.src -p1
@@ -164,28 +151,5 @@ This package contains the web scripts for mumble-server.
 %doc CHANGES LICENSE
 #doc scripts/murmur.ini
 %{_bindir}/mumble-server
-
-#{_initrddir}/%{name}-server
-#{_tmpfilesdir}/%{name}-server.conf
-#config(noreplace) %{_sysconfdir}/%{name}-server.ini
-#{_sysconfdir}/logrotate.d/%{name}-server
-#{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
-#attr(-,mumble-server,mumble-server) %dir %{_localstatedir}/lib/%{name}-server
-#attr(-,mumble-server,root) %dir %{_localstatedir}/log/%{name}-server
-#attr(-,mumble-server,mumble-server) %ghost %dir %{_rundir}/%{name}-server
-#if %build_ice
-#{_datadir}/slice/Murmur.ice
-#endif
-#{_mandir}/man1/murmur-user-wrapper.*
-#{_mandir}/man1/murmurd.*
-
-#if %build_web
-#files server-web
-#doc README.install.urpmi
-#config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}-server-web.conf
-#if %build_ice
-#config(noreplace) %{_sysconfdir}/php.d/MurmurPHP.ini
-#endif
-#{_datadir}/%{name}-server-web
-#endif
-#endif
+%{_mandri}/man1/murmur-user-wrapper.1.*
+%{_mandri}/man1/murmurd.1.*
