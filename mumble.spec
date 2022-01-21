@@ -1,32 +1,3 @@
-#define _disable_lto 1
-
-# configuration options for the server (murmur)
-%define build_server	1
-%define build_web	1
-%define build_ice	0
-# configuration options for the client
-%define build_client	1
-%define build_speechd	1
-%define build_g15	1
-
-%{?_without_server:	%{expand: %%global build_server 0}}
-%{?_without_server:	%{expand: %%global build_ice 0}}
-%{?_with_server:	%{expand: %%global build_server 1}}
-
-%{?_without_ice:	%{expand: %%global build_ice 0}}
-%{?_with_ice:		%{expand: %%global build_ice 1}}
-
-%{?_without_client:	%{expand: %%global build_client 0}}
-%{?_without_client:	%{expand: %%global build_speechd 0}}
-%{?_without_client:	%{expand: %%global build_g15 0}}
-%{?_with_client:	%{expand: %%global build_client 1}}
-
-%{?_without_speechd:	%{expand: %%global build_speechd 0}}
-%{?_with_speechd:	%{expand: %%global build_speechd 1}}
-
-%{?_without_g15:	%{expand: %%global build_g15 0}}
-%{?_with_g15:		%{expand: %%global build_g15 1}}
-
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.4.230
@@ -82,7 +53,6 @@ BuildRequires:	pkgconfig(speexdsp)
 # NOT YET IN OMV
 #BuildRequires:	pkgconfig(celt071)
 #BuildRequires:	pkgconfig(celt)
-BuildRequires:  pkgconfig(ice)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(ogg)
@@ -97,22 +67,9 @@ BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(glut)
 BuildRequires:	egl-devel
 
-%if %build_speechd
 BuildRequires:	pkgconfig(speech-dispatcher)
-%endif
 
-%if %build_g15
-BuildRequires:	g15daemon_client-devel
-%endif
-
-# (cg) The celt libraries are loaded dynamically but we need at least 0.7.1 to
-# be compatible with the Windows and OSX clients
-# The 0.11 version can work if the clients (and presumably the server) all
-# support it.
-# Using mklibname is not ideal but it's the easiest option for now
-#Requires:	%{mklibname celt 071 0}
-
-#We try to use bundled Celt 0.7 and 0.11
+#BuildRequires:	g15daemon_client-devel
 
 # For sanity, add as dep celt
 Requires:	celt
@@ -121,13 +78,8 @@ Requires:	qt5-database-plugin-sqlite
 Requires:	%{name}-plugins = %{version}-%{release}
 Recommends:	%{name}-protocol-plasma5
 
-%if %build_speechd
 Recommends:	speech-dispatcher
-%endif
-
-%if %build_g15
 Recommends:	g15daemon
-%endif
 
 %description
 Low-latency, high-quality voice communication for gamers.
@@ -137,16 +89,6 @@ from the direction of their characters, and has echo
 cancellation so the sound from your loudspeakers won't be
 audible to other players.
 
-%package	protocol-plasma5
-Summary:	The mumble protocol for Plasma5
-Group:		Graphical desktop/KDE
-Requires:	%{name} = %{version}-%{release}
-# keep just protocol for plasma5 (kde4 is dead)
-Obsoletes:	mumble-protocol-kde4
-
-%description	protocol-plasma5
-The mumble protocol for Plasma5.
-
 %package	plugins
 Summary:	Mumble plugins
 Group:		Communications/Telephony
@@ -155,7 +97,6 @@ Requires:	%{name} = %{version}-%{release}
 %description	plugins
 This packages provides the Mumble plugins.
 
-%if %build_server
 %package	server
 Summary:	Murmur, the VOIP server for Mumble
 Group:		Communications/Telephony
@@ -163,31 +104,27 @@ Requires(post):	systemd >= %{systemd_required_version}
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
 Requires(preun):	rpm-helper
-%if %build_ice
+
+# Currently ice source is dropped in Cooker. Let's enable it when package brack to repo (angry.p)
 # keep ice-devel, pkgconfig(ice) is not the same ice devel pkg
-BuildRequires:	ice-devel
+#BuildRequires:	ice-devel
 # (cg) ice-devel should require this itself, but it doesn't...
-BuildRequires:	ice
-%endif
+#BuildRequires:	ice
+
 Requires:	qt5-database-plugin-sqlite
 Requires:	dbus
-%if !%build_web
-Conflicts:	%{name}-server-web
-%endif
 
 %description	server
 This package provides Murmur, the VOIP server for Mumble.
 
-%if %build_web
 %package	server-web
 Summary:	Web scripts for mumble-server
 Group:		Communications/Telephony
 Requires:	apache
 Requires:	perl-CGI
 Requires:	mail-server
-%if %build_ice
-Requires:	ice
-%endif
+
+#Requires:	ice
 Requires:	%{name}-server = %{version}-%{release}
 
 %description	server-web
@@ -199,13 +136,12 @@ This package contains the web scripts for mumble-server.
 %prep
 %autosetup -n %{name}-%{version}.src -p1
 
-#cp -p %{SOURCE4} README.install.urpmi
-
 %build
 %cmake \
 	-Dice=off \
 	-Doverlay-xcompile=off \
-	-Dwarnings-as-errors=off
+	-Dwarnings-as-errors=off \
+	-Dbundled-opus=off
 
 %make_build
 
@@ -213,31 +149,25 @@ This package contains the web scripts for mumble-server.
 %make_install -C build
 
 
-#files
-#doc README README.Linux CHANGES LICENSE
-#{_bindir}/%{name}
-#{_bindir}/%{name}-overlay
-#{_datadir}/%{name}/
-#{_datadir}/applications/%{name}.desktop
-#{_iconsdir}/hicolor/*/apps/%{name}.svg
-#{_mandir}/man1/%{name}.*
-#{_mandir}/man1/%{name}-overlay.*
+%files
+%doc CHANGES LICENSE
+%{_bindir}/%{name}
+%{_bindir}/%{name}-overlay
+%{_datadir}/applications/org.mumble_voip.mumble.desktop
+%{_datadir}/metainfo/org.mumble_voip.mumble.appdata.xml
+%{_iconsdir}/hicolor/*x*/apps/mumble.png
+%{_iconsdir}/hicolor/scalable/apps/mumble.svg
+%{_mandir}/man1/mumble-overlay.1.*
+%{_mandir}/man1/mumble.1.*
 
-#files protocol-plasma5
-#{_kf5_services}/%{name}.protocol
+%files plugins
+%{_libdir}/%{name}
 
-#files plugins
-#{_libdir}/%{name}
-#endif
-
-#if %build_server
-#files server
-#if %build_client == 0
-#doc README README.Linux CHANGES LICENSE
-#endif
+%files server
+%doc CHANGES LICENSE
 #doc scripts/murmur.ini
-#{_bindir}/murmur-user-wrapper
-#{_sbindir}/murmurd
+%{_bindir}/mumble-server
+
 #{_initrddir}/%{name}-server
 #{_tmpfilesdir}/%{name}-server.conf
 #config(noreplace) %{_sysconfdir}/%{name}-server.ini
