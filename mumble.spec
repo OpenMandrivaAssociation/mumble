@@ -35,12 +35,10 @@ License:	BSD
 Group:		Communications/Telephony
 Url:		http://mumble.sourceforge.net/
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
-#Patch0:		mumble-1.3.1-openssl3.patch
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
 Source2:	%{name}-server-web.conf
 Source3:	MurmurPHP.ini
-#Source4:	README.install.urpmi.mumble-server-web
 Source5:	%{name}-server-init.mdv
 Source6:	%{name}-server.logrotate
 Source7:	%{name}-tmpfiles.conf
@@ -50,7 +48,7 @@ Source7:	%{name}-tmpfiles.conf
 # Fix broken celt-0.11.3 (uncompatible with mumble) mga#12853
 #Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
 #Patch3:		mumble-1.3.0-celt071-AudioInput.patch
-Patch4:		mumble-1.3.0-fix-linking-failure-in-overlay_gl.patch
+Patch4:		mumble-1.4.0-fix-linking-failure-in-overlay_gl.patch
 Patch5:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5354.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
@@ -215,53 +213,52 @@ This package contains the web scripts for mumble-server.
 %make_install -C build
 
 
-%if %build_client
-%files
-%doc README README.Linux CHANGES LICENSE
-%{_bindir}/%{name}
-%{_bindir}/%{name}-overlay
-%{_datadir}/%{name}/
-%{_datadir}/applications/%{name}.desktop
-%{_iconsdir}/hicolor/*/apps/%{name}.svg
-%{_mandir}/man1/%{name}.*
-%{_mandir}/man1/%{name}-overlay.*
+#files
+#doc README README.Linux CHANGES LICENSE
+#{_bindir}/%{name}
+#{_bindir}/%{name}-overlay
+#{_datadir}/%{name}/
+#{_datadir}/applications/%{name}.desktop
+#{_iconsdir}/hicolor/*/apps/%{name}.svg
+#{_mandir}/man1/%{name}.*
+#{_mandir}/man1/%{name}-overlay.*
 
-%files protocol-plasma5
+#files protocol-plasma5
 #{_kf5_services}/%{name}.protocol
 
-%files plugins
-%{_libdir}/%{name}
-%endif
+#files plugins
+#{_libdir}/%{name}
+#endif
 
-%if %build_server
-%files server
-%if %build_client == 0
-%doc README README.Linux CHANGES LICENSE
-%endif
-%doc scripts/murmur.ini
-%{_bindir}/murmur-user-wrapper
-%{_sbindir}/murmurd
-%{_initrddir}/%{name}-server
-%{_tmpfilesdir}/%{name}-server.conf
-%config(noreplace) %{_sysconfdir}/%{name}-server.ini
-%{_sysconfdir}/logrotate.d/%{name}-server
-%{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
-%attr(-,mumble-server,mumble-server) %dir %{_localstatedir}/lib/%{name}-server
-%attr(-,mumble-server,root) %dir %{_localstatedir}/log/%{name}-server
-%attr(-,mumble-server,mumble-server) %ghost %dir %{_rundir}/%{name}-server
-%if %build_ice
-%{_datadir}/slice/Murmur.ice
-%endif
-%{_mandir}/man1/murmur-user-wrapper.*
-%{_mandir}/man1/murmurd.*
+#if %build_server
+#files server
+#if %build_client == 0
+#doc README README.Linux CHANGES LICENSE
+#endif
+#doc scripts/murmur.ini
+#{_bindir}/murmur-user-wrapper
+#{_sbindir}/murmurd
+#{_initrddir}/%{name}-server
+#{_tmpfilesdir}/%{name}-server.conf
+#config(noreplace) %{_sysconfdir}/%{name}-server.ini
+#{_sysconfdir}/logrotate.d/%{name}-server
+#{_sysconfdir}/dbus-1/system.d/%{name}-server.conf
+#attr(-,mumble-server,mumble-server) %dir %{_localstatedir}/lib/%{name}-server
+#attr(-,mumble-server,root) %dir %{_localstatedir}/log/%{name}-server
+#attr(-,mumble-server,mumble-server) %ghost %dir %{_rundir}/%{name}-server
+#if %build_ice
+#{_datadir}/slice/Murmur.ice
+#endif
+#{_mandir}/man1/murmur-user-wrapper.*
+#{_mandir}/man1/murmurd.*
 
-%if %build_web
-%files server-web
+#if %build_web
+#files server-web
 #doc README.install.urpmi
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}-server-web.conf
-%if %build_ice
-%config(noreplace) %{_sysconfdir}/php.d/MurmurPHP.ini
-%endif
-%{_datadir}/%{name}-server-web
-%endif
-%endif
+#config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}-server-web.conf
+#if %build_ice
+#config(noreplace) %{_sysconfdir}/php.d/MurmurPHP.ini
+#endif
+#{_datadir}/%{name}-server-web
+#endif
+#endif
