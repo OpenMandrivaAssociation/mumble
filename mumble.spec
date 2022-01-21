@@ -51,6 +51,7 @@ Source7:	%{name}-tmpfiles.conf
 #Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
 #Patch3:		mumble-1.3.0-celt071-AudioInput.patch
 Patch4:		mumble-1.3.0-fix-linking-failure-in-overlay_gl.patch
+Patch5:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5354.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
