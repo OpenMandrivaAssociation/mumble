@@ -95,8 +95,8 @@ BuildRequires:	pkgconfig(xi) >= 1.6.0
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(dri)
 BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(glut)
 BuildRequires:	egl-devel
-BuildRequires:	cross-x86_64-openmandriva-linux-gnux32-libc
 
 %if %build_speechd
 BuildRequires:	pkgconfig(speech-dispatcher)
