@@ -130,9 +130,6 @@ Requires:	%{name}-server = %{version}-%{release}
 %description	server-web
 This package contains the web scripts for mumble-server.
 
-%endif
-%endif
-
 %prep
 %autosetup -n %{name}-%{version}.src -p1
 
