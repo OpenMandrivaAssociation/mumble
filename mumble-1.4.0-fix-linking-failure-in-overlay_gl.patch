@@ -5,7 +5,7 @@ diff -uraN mumble-1.4.230.src/overlay_gl/CMakeLists.txt OpenMandriva-mumble-1.4.
  			PRIVATE
  				"-ldl"
  				"-lrt"
-+                "-lGL"
++				"-lGL"
  		)
  
  		if(TARGET overlay_gl_x86)
