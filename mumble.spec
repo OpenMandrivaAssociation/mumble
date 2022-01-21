@@ -1,7 +1,5 @@
 #define _disable_lto 1
 
-%global optflags %{optflags} -GLX
-
 # configuration options for the server (murmur)
 %define build_server	1
 %define build_web	1
@@ -52,7 +50,7 @@ Source7:	%{name}-tmpfiles.conf
 # Fix broken celt-0.11.3 (uncompatible with mumble) mga#12853
 #Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
 #Patch3:		mumble-1.3.0-celt071-AudioInput.patch
-#Patch4:		mumble-1.3.0-fix-linking-failure-in-overlay_gl.patch
+Patch4:		mumble-1.3.0-fix-linking-failure-in-overlay_gl.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
