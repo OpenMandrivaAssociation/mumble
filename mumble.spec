@@ -151,5 +151,5 @@ This package provides Murmur, the VOIP server for Mumble.
 %doc CHANGES LICENSE
 #doc scripts/murmur.ini
 %{_bindir}/mumble-server
-%{_mandri}/man1/murmur-user-wrapper.1.*
-%{_mandri}/man1/murmurd.1.*
+%{_mandrir}/man1/murmur-user-wrapper.1.*
+%{_mandrir}/man1/murmurd.1.*
