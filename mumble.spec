@@ -1,5 +1,7 @@
 #define _disable_lto 1
 
+%global optflags %{optflags} -lGLX
+
 # configuration options for the server (murmur)
 %define build_server	1
 %define build_web	1
