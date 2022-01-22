@@ -1,3 +1,5 @@
+%global optflags %optflags -O3
+
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.4.230
@@ -127,6 +129,7 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %build
 %cmake \
+	-DCMAKE_BUILD_TYPE=Release \
 	-Dice=off \
 	-Doverlay-xcompile=off \
 	-Dwarnings-as-errors=off \
@@ -134,7 +137,8 @@ This package provides Murmur, the VOIP server for Mumble.
 	-Dbundled-rnnoise=off \
 	-Dalsa=on \
 	-Dpulseaudio=on \
-	-Dpipewire=on
+	-Dpipewire=on \
+	-DOpenGL_GL_PREFERENCE=GLVND
 
 %make_build
 
