@@ -41,6 +41,10 @@ BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	pkgconfig(Qt5Xml)
 BuildRequires:  pkgconfig(expat)
 BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(alsa)
+BuildRequires:	pkgconfig(libpulse)
+BuildRequires:	pkgconfig(libpipewire-0.3)
+BuildRequires:	pkgconfig(rnnoise)
 BuildRequires:	boost-devel
 BuildRequires:	protobuf-compiler
 BuildRequires:	pkgconfig(avahi-compat-libdns_sd)
@@ -72,7 +76,8 @@ BuildRequires:	pkgconfig(speech-dispatcher)
 #BuildRequires:	g15daemon_client-devel
 
 # For sanity, add as dep celt
-Requires:	celt
+Celt is currently bundled until we fix system version. Anyway it neec compact version 0.7 (angry.p)
+#Requires:	celt
 
 Requires:	qt5-database-plugin-sqlite
 Requires:	%{name}-plugins = %{version}-%{release}
@@ -125,7 +130,11 @@ This package provides Murmur, the VOIP server for Mumble.
 	-Dice=off \
 	-Doverlay-xcompile=off \
 	-Dwarnings-as-errors=off \
-	-Dbundled-opus=off
+	-Dbundled-opus=off \
+	-Dbundled-rnnoise=off \
+	-Dalsa=on \
+	-Dpulseaudio=on \
+	-Dpipewire=on
 
 %make_build
 
