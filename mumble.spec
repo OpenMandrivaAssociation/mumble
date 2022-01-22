@@ -76,7 +76,7 @@ BuildRequires:	pkgconfig(speech-dispatcher)
 #BuildRequires:	g15daemon_client-devel
 
 # For sanity, add as dep celt
-Celt is currently bundled until we fix system version. Anyway it neec compact version 0.7 (angry.p)
+#Celt is currently bundled until we fix system version. Anyway it neec compact version 0.7 (angry.p)
 #Requires:	celt
 
 Requires:	qt5-database-plugin-sqlite
