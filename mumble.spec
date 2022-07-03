@@ -1,9 +1,10 @@
+%define _disable_ld_no_undefined 1
 %global optflags %optflags -O3
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.4.230
-Release:	1
+Release:	2
 License:	BSD
 Group:		Communications/Telephony
 Url:		http://mumble.sourceforge.net/
@@ -21,7 +22,7 @@ Source7:	%{name}-tmpfiles.conf
 # Fix broken celt-0.11.3 (uncompatible with mumble) mga#12853
 #Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
 #Patch3:		mumble-1.3.0-celt071-AudioInput.patch
-Patch4:		mumble-1.4.0-fix-linking-failure-in-overlay_gl.patch
+#Patch4:		mumble-1.4.0-fix-linking-failure-in-overlay_gl.patch
 Patch5:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5354.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
