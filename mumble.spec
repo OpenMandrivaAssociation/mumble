@@ -76,7 +76,6 @@ BuildRequires:	pkgconfig(dri)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(glut)
 BuildRequires:	egl-devel
-
 BuildRequires:	pkgconfig(speech-dispatcher)
 
 #BuildRequires:	g15daemon_client-devel
@@ -132,8 +131,6 @@ This package provides Murmur, the VOIP server for Mumble.
 %autosetup -n %{name}-%{version}.src -p1
 
 %build
-#export CC=gcc
-#export CXX=g++
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
 	-Dice=off \
@@ -150,7 +147,6 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %install
 %make_install -C build
-
 
 %files
 %doc CHANGES LICENSE
