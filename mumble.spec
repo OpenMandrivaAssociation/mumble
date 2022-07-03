@@ -32,6 +32,7 @@ BuildRequires:	cmake
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
 BuildRequires:	cmake(Poco)
+BuildRequires:	poco
 BuildRequires:	qt5-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5Concurrent)
@@ -130,8 +131,8 @@ This package provides Murmur, the VOIP server for Mumble.
 %autosetup -n %{name}-%{version}.src -p1
 
 %build
-export CC=gcc
-export CXX=g++
+#export CC=gcc
+#export CXX=g++
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
 	-Dice=off \
