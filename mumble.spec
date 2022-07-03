@@ -25,6 +25,7 @@ Source7:	%{name}-tmpfiles.conf
 #Patch4:		mumble-1.4.0-fix-linking-failure-in-overlay_gl.patch
 Patch5:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5354.patch
 Patch6:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5655.patch
+Patch7:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5617.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
