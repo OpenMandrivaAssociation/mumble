@@ -4,7 +4,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.4.230
-Release:	2
+Release:	3
 License:	BSD
 Group:		Communications/Telephony
 Url:		http://mumble.sourceforge.net/
