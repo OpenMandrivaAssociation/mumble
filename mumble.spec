@@ -7,7 +7,7 @@ Version:	1.4.230
 Release:	4
 License:	BSD
 Group:		Communications/Telephony
-Url:		http://mumble.sourceforge.net/
+Url:		https://www.mumble.info
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server.ini
