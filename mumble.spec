@@ -3,8 +3,8 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.4.230
-Release:	4
+Version:	1.4.274
+Release:	1
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
@@ -16,16 +16,7 @@ Source3:	MurmurPHP.ini
 Source5:	%{name}-server-init.mdv
 Source6:	%{name}-server.logrotate
 Source7:	%{name}-tmpfiles.conf
-#Patch0:		mumble-1.3.0-mga-celt071_include_dir.patch
-# Fix broken logrotate script (start-stop-daemon not available anymore), BZ 730129
-#Patch1:		mumble-1.2.3-fdr-logrotate.patch
-# Fix broken celt-0.11.3 (uncompatible with mumble) mga#12853
-#Patch2:		mumble-1.3.0-mga-only-use-celt071-libnames.patch
-#Patch3:		mumble-1.3.0-celt071-AudioInput.patch
-#Patch4:		mumble-1.4.0-fix-linking-failure-in-overlay_gl.patch
-Patch5:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5354.patch
-Patch6:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5655.patch
-Patch7:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5617.patch
+Patch0:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5354.patch
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
@@ -128,7 +119,7 @@ Requires:	dbus
 This package provides Murmur, the VOIP server for Mumble.
 
 %prep
-%autosetup -n %{name}-%{version}.src -p1
+%autosetup -n %{name}-src -p1
 
 %build
 %cmake \
@@ -149,11 +140,11 @@ This package provides Murmur, the VOIP server for Mumble.
 %make_install -C build
 
 %files
-%doc CHANGES LICENSE
+%license LICENSE
 %{_bindir}/%{name}
 %{_bindir}/%{name}-overlay
-%{_datadir}/applications/org.mumble_voip.mumble.desktop
-%{_datadir}/metainfo/org.mumble_voip.mumble.appdata.xml
+%{_datadir}/applications/info.mumble.Mumble.desktop
+%{_datadir}/metainfo/info.mumble.Mumble.appdata.xml
 %{_iconsdir}/hicolor/*x*/apps/mumble.png
 %{_iconsdir}/hicolor/scalable/apps/mumble.svg
 %{_mandir}/man1/mumble-overlay.1.*
@@ -163,8 +154,8 @@ This package provides Murmur, the VOIP server for Mumble.
 %{_libdir}/%{name}
 
 %files server
-%doc CHANGES LICENSE
+%license LICENSE
 #doc scripts/murmur.ini
 %{_bindir}/mumble-server
-%{_mandir}/man1/murmur-user-wrapper.1.*
-%{_mandir}/man1/murmurd.1.*
+%{_mandir}/man1/mumble-server-user-wrapper.1.*
+%{_mandir}/man1/mumble-server.1.*
