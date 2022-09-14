@@ -1,9 +1,11 @@
 %define _disable_ld_no_undefined 1
 %global optflags %optflags -O3
 
+%define build_number 287
+
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.4.287
+Version:	1.4.%{build_number}
 Release:	1
 License:	BSD
 Group:		Communications/Telephony
@@ -124,6 +126,7 @@ This package provides Murmur, the VOIP server for Mumble.
 %build
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_NUMBER=%{build_number} \
 	-Dice=off \
 	-Doverlay-xcompile=off \
 	-Dwarnings-as-errors=off \
