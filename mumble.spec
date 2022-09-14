@@ -3,7 +3,7 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.4.274
+Version:	1.4.287
 Release:	1
 License:	BSD
 Group:		Communications/Telephony
@@ -119,7 +119,7 @@ Requires:	dbus
 This package provides Murmur, the VOIP server for Mumble.
 
 %prep
-%autosetup -n %{name}-src -p1
+%autosetup -n %{name}-%{version}.src -p1
 
 %build
 %cmake \
