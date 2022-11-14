@@ -6,7 +6,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.4.%{build_number}
-Release:	1
+Release:	2
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
