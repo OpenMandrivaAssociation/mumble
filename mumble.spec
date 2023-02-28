@@ -1,24 +1,24 @@
 %define _disable_ld_no_undefined 1
 %global optflags %optflags -O3
 
-%define build_number 287
+%define build_number 517
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.4.%{build_number}
-Release:	2
+Version:	1.5.%{build_number}
+Release:	1
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
+Patch0:		mumble-server_config_database_path.patch
+Patch1:		auxiliary_files_fallback_path_fix.patch
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
 # conf files courtesy of debian package
-Source1:	%{name}-server.ini
-Source2:	%{name}-server-web.conf
-Source3:	MurmurPHP.ini
-Source5:	%{name}-server-init.mdv
-Source6:	%{name}-server.logrotate
-Source7:	%{name}-tmpfiles.conf
-Patch0:		https://patch-diff.githubusercontent.com/raw/mumble-voip/mumble/pull/5354.patch
+Source1:	%{name}-server-web.conf
+Source2:	MurmurPHP.ini
+Source3:	%{name}-server-init.mdv
+Source4:	%{name}-server.logrotate
+Source5:	%{name}-tmpfiles.conf
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
@@ -121,11 +121,12 @@ Requires:	dbus
 This package provides Murmur, the VOIP server for Mumble.
 
 %prep
-%autosetup -n %{name}-%{version}.src -p1
+%autosetup -p1
 
 %build
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
 	-DBUILD_NUMBER=%{build_number} \
 	-Dice=off \
 	-Doverlay-xcompile=off \
@@ -141,6 +142,8 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %install
 %make_install -C build
+
+mkdir -p %{buildroot}%{_localstatedir}/lib/mumble-server
 
 %files
 %license LICENSE
@@ -158,7 +161,13 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %files server
 %license LICENSE
-#doc scripts/murmur.ini
-%{_bindir}/mumble-server
-%{_mandir}/man1/mumble-server-user-wrapper.1.*
-%{_mandir}/man1/mumble-server.1.*
+%{_bindir}/%{name}-server
+%{_bindir}/%{name}-server-user-wrapper
+%{_datadir}/dbus-1/system.d/%{name}-server.conf
+%dir %attr(-,_%{name}-server,_%{name}-server) %{_localstatedir}/lib/%{name}-server
+%{_mandir}/man1/%{name}-server.1.*
+%{_mandir}/man1/%{name}-server-user-wrapper.1.*
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
+%{_sysconfdir}/%{name}/MumbleServer.ice
+%{_sysusersdir}/%{name}-server.conf
+%{_unitdir}/%{name}-server.service

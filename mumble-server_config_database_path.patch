@@ -1,0 +1,13 @@
+diff --git a/auxiliary_files/mumble-server.ini b/auxiliary_files/mumble-server.ini
+index 9722b4445..f30b4d082 100644
+--- a/auxiliary_files/mumble-server.ini
++++ b/auxiliary_files/mumble-server.ini
+@@ -13,7 +13,7 @@
+ 
+ ; Path to database. If blank, will search for
+ ; mumble-server.sqlite in default locations or create it if not found.
+-database=
++database=/var/lib/mumble-server/mumble-server.sqlite
+ 
+ ; The server defaults to using SQLite with its default rollback journal.
+ ; In some situations, using SQLite's write-ahead log (WAL) can be
