@@ -6,7 +6,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.5.%{build_number}
-Release:	1
+Release:	2
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
@@ -19,6 +19,7 @@ Source2:	MurmurPHP.ini
 Source3:	%{name}-server-init.mdv
 Source4:	%{name}-server.logrotate
 Source5:	%{name}-tmpfiles.conf
+Source6:	mumble-server.sysusers
 
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
@@ -145,6 +146,9 @@ This package provides Murmur, the VOIP server for Mumble.
 
 mkdir -p %{buildroot}%{_localstatedir}/lib/mumble-server
 
+mkdir -p %{buildroot}%{_sysusersdir}
+cp -f %{S:6} %{buildroot}%{_sysusersdir}/mumble-server.conf
+
 %files
 %license LICENSE
 %{_bindir}/%{name}
@@ -158,6 +162,9 @@ mkdir -p %{buildroot}%{_localstatedir}/lib/mumble-server
 
 %files plugins
 %{_libdir}/%{name}
+
+%pre server
+%sysusers_create_package mumble-server %{S:6}
 
 %files server
 %license LICENSE
