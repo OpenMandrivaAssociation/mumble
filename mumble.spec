@@ -24,6 +24,7 @@ Source6:	mumble-server.sysusers
 BuildConflicts:	celt-devel >= 0.7.0
 BuildRequires:	desktop-file-utils
 BuildRequires:	cmake
+BuildRequires:	ninja
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
 BuildRequires:	cmake(Poco)
@@ -134,13 +135,14 @@ This package provides Murmur, the VOIP server for Mumble.
 	-Dbundled-rnnoise=off \
 	-Dalsa=on \
 	-Dpulseaudio=on \
-	-Dpipewire=on
+	-Dpipewire=on \
+	-G Ninja
 
 %build
-%make_build -C build
+%ninja_build -C build
 
 %install
-%make_install -C build
+%ninja_install -C build
 
 mkdir -p %{buildroot}%{_localstatedir}/lib/mumble-server
 
