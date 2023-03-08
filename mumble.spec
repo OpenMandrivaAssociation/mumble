@@ -48,6 +48,8 @@ BuildRequires:	pkgconfig(libpipewire-0.3)
 BuildRequires:	pkgconfig(rnnoise)
 BuildRequires:	boost-devel
 BuildRequires:	protobuf-compiler
+# For protobuf
+BuildRequires:	cmake(absl)
 BuildRequires:	pkgconfig(avahi-compat-libdns_sd)
 # NOT YET IN OMV
 #BuildRequires:	pkgconfig(grpc)
