@@ -1,12 +1,12 @@
 %define _disable_ld_no_undefined 1
-%global optflags %optflags -O3
+%global optflags %optflags -O3 -DPROTOBUF_USE_DLLS
 
 %define build_number %(echo %{version} |cut -d. -f3)
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.5.517
-Release:	2
+Release:	3
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
@@ -136,6 +136,7 @@ This package provides Murmur, the VOIP server for Mumble.
 	-Dalsa=on \
 	-Dpulseaudio=on \
 	-Dpipewire=on \
+	-Dprotobuf_PROTOC_EXE=$(which protoc) \
 	-G Ninja
 
 %build
