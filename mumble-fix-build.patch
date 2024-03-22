@@ -1,0 +1,11 @@
+diff -up mumble-1.5.517/src/mumble/PluginUpdater.h.omv~ mumble-1.5.517/src/mumble/PluginUpdater.h
+--- mumble-1.5.517/src/mumble/PluginUpdater.h.omv~	2024-03-23 13:09:26.692740648 +0100
++++ mumble-1.5.517/src/mumble/PluginUpdater.h	2024-03-23 13:10:23.129339221 +0100
+@@ -29,6 +29,7 @@ struct UpdateWidgetPair {
+ /// the same plugin.
+ struct UpdateEntry {
+ 	UpdateEntry() = default;
++	UpdateEntry(plugin_id_t const &p, QUrl const &u, QString const &f, int const r):pluginID(p),updateURL(u),fileName(f),redirects(r) {}
+ 
+ 	plugin_id_t pluginID = std::numeric_limits< plugin_id_t >::max();
+ 	QUrl updateURL;
