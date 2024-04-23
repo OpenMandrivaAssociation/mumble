@@ -16,7 +16,7 @@ Patch2:		mumble-fix-build.patch
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server-web.conf
-Source2:	MurmurPHP.ini
+#Source2:	MurmurPHP.ini
 Source3:	%{name}-server-init.mdv
 Source4:	%{name}-server.logrotate
 Source5:	%{name}-tmpfiles.conf
@@ -132,8 +132,10 @@ This package provides Murmur, the VOIP server for Mumble.
 	-DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
 	-DBUILD_NUMBER=%{build_number} \
 	-Dice=off \
+%ifnarch %{x86_64}
 	-Doverlay-xcompile=off \
-	-Dwarnings-as-errors=off \
+%endif
+	-Dwarnings-as-errors=on \
 	-Dbundled-opus=off \
 	-Dbundled-rnnoise=off \
 	-Dalsa=on \
@@ -179,6 +181,6 @@ cp -f %{S:6} %{buildroot}%{_sysusersdir}/mumble-server.conf
 %{_mandir}/man1/%{name}-server.1.*
 %{_mandir}/man1/%{name}-server-user-wrapper.1.*
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
-%{_sysconfdir}/%{name}/MumbleServer.ice
+#%%{_sysconfdir}/%%{name}/MumbleServer.ice
 %{_sysusersdir}/%{name}-server.conf
 %{_unitdir}/%{name}-server.service
