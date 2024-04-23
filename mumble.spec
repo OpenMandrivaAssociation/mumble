@@ -13,7 +13,7 @@ Url:		https://www.mumble.info
 Patch0:		mumble-server_config_database_path.patch
 Patch1:		auxiliary_files_fallback_path_fix.patch
 Patch2:		mumble-fix-build.patch
-Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
+Source0:	https://github.com/mumble-voip/mumble/archive/refs/tags/v%{version}.tar.gz#/mumble-%{version}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server-web.conf
 Source2:	FindPythonInterpreter.cmake
@@ -139,6 +139,7 @@ cp %{S:2} 3rdparty/FindPythonInterpreter/
 	-Dwarnings-as-errors=off \
 	-Dbundled-opus=off \
 	-Dbundled-rnnoise=off \
+	-Dbundled-speex=off \
 	-Dalsa=on \
 	-Dpulseaudio=on \
 	-Dpipewire=on \
@@ -181,6 +182,8 @@ cp -f %{S:6} %{buildroot}%{_sysusersdir}/mumble-server.conf
 %dir %attr(-,_%{name}-server,_%{name}-server) %{_localstatedir}/lib/%{name}-server
 %{_mandir}/man1/%{name}-server.1.*
 %{_mandir}/man1/%{name}-server-user-wrapper.1.*
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
 %{_sysusersdir}/%{name}-server.conf
 %{_unitdir}/%{name}-server.service
+%dir %{_sysconfdir}/%{name}
+%config(noreplace) %{_sysconfdir}/%{name}/MumbleServer.ice
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
