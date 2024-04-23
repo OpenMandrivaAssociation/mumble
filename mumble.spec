@@ -16,7 +16,6 @@ Patch2:		mumble-fix-build.patch
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server-web.conf
-#Source2:	MurmurPHP.ini
 Source3:	%{name}-server-init.mdv
 Source4:	%{name}-server.logrotate
 Source5:	%{name}-tmpfiles.conf
@@ -108,7 +107,7 @@ This packages provides the Mumble plugins.
 %package	server
 Summary:	Murmur, the VOIP server for Mumble
 Group:		Communications/Telephony
-Requires(post):	systemd >= %{systemd_required_version}
+Requires(post):	systemd
 Requires(pre):	rpm-helper
 Requires(post):	rpm-helper
 Requires(preun): rpm-helper
@@ -181,6 +180,5 @@ cp -f %{S:6} %{buildroot}%{_sysusersdir}/mumble-server.conf
 %{_mandir}/man1/%{name}-server.1.*
 %{_mandir}/man1/%{name}-server-user-wrapper.1.*
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
-#%%{_sysconfdir}/%%{name}/MumbleServer.ice
 %{_sysusersdir}/%{name}-server.conf
 %{_unitdir}/%{name}-server.service
