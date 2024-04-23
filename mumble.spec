@@ -6,7 +6,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.5.517
-Release:	8
+Release:	9
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
@@ -16,6 +16,7 @@ Patch2:		mumble-fix-build.patch
 Source0:	https://github.com/mumble-voip/mumble/releases/download/%{version}%{?prel:-%prel}/%{name}-%{version}%{?prel:-%prel}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server-web.conf
+Source2:	FindPythonInterpreter.cmake
 Source3:	%{name}-server-init.mdv
 Source4:	%{name}-server.logrotate
 Source5:	%{name}-tmpfiles.conf
@@ -29,7 +30,7 @@ BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
 BuildRequires:	cmake(Poco)
 BuildRequires:	poco
-BuildRequires:	qt5-qttranslations
+BuildRequires:	qt6-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5Concurrent)
 BuildRequires:	pkgconfig(Qt5DBus)
@@ -126,6 +127,7 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %prep
 %autosetup -p1
+cp 
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
