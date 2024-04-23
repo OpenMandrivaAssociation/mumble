@@ -1,5 +1,5 @@
 %define _disable_ld_no_undefined 1
-%global optflags %optflags -O3 -DPROTOBUF_USE_DLLS
+%global optflags %(echo %{optflags} |sed -e 's,-m64,,') -O3 -DPROTOBUF_USE_DLLS
 
 %define build_number %(echo %{version} |cut -d. -f3)
 
@@ -127,7 +127,7 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %prep
 %autosetup -p1
-cp 
+cp %{S:2} 3rdparty/FindPythonInterpreter/
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
@@ -136,7 +136,7 @@ cp
 %ifnarch %{x86_64}
 	-Doverlay-xcompile=off \
 %endif
-	-Dwarnings-as-errors=on \
+	-Dwarnings-as-errors=off \
 	-Dbundled-opus=off \
 	-Dbundled-rnnoise=off \
 	-Dalsa=on \
