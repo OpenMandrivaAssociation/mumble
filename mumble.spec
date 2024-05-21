@@ -11,7 +11,7 @@ License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
 Patch0:		mumble-server_config_database_path.patch
-Patch1:		auxiliary_files_fallback_path_fix.patch
+#Patch1:		auxiliary_files_fallback_path_fix.patch
 Patch2:		mumble-fix-build.patch
 Source0:	https://github.com/mumble-voip/mumble/archive/refs/tags/v%{version}.tar.gz#/mumble-%{version}.tar.gz
 # conf files courtesy of debian package
