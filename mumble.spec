@@ -144,6 +144,7 @@ cp %{S:2} 3rdparty/FindPythonInterpreter/
 	-Dpulseaudio=on \
 	-Dpipewire=on \
 	-Dprotobuf_PROTOC_EXE=$(which protoc) \
+        -Duse-pkgconf-install-paths=ON \
 	-G Ninja
 
 %build
