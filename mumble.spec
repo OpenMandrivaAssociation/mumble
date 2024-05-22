@@ -5,13 +5,13 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.5.517
-Release:	9
+Version:	1.5.634
+Release:	1
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
 Patch0:		mumble-server_config_database_path.patch
-Patch1:		auxiliary_files_fallback_path_fix.patch
+#Patch1:		auxiliary_files_fallback_path_fix.patch
 Patch2:		mumble-fix-build.patch
 Source0:	https://github.com/mumble-voip/mumble/archive/refs/tags/v%{version}.tar.gz#/mumble-%{version}.tar.gz
 # conf files courtesy of debian package
@@ -136,15 +136,18 @@ cp %{S:2} 3rdparty/FindPythonInterpreter/
 %ifnarch %{x86_64}
 	-Doverlay-xcompile=off \
 %endif
+	-Dbundled-renamenoise=on \
+	-Drenamenoise=on \
 	-Dwarnings-as-errors=off \
 	-Dbundled-opus=off \
-	-Dbundled-rnnoise=off \
 	-Dbundled-speex=off \
 	-Dalsa=on \
 	-Dpulseaudio=on \
 	-Dpipewire=on \
 	-Dprotobuf_PROTOC_EXE=$(which protoc) \
 	-G Ninja
+ 
+ #-Dbundled-rnnoise=off \
 
 %build
 %ninja_build -C build
@@ -178,12 +181,14 @@ cp -f %{S:6} %{buildroot}%{_sysusersdir}/mumble-server.conf
 %license LICENSE
 %{_bindir}/%{name}-server
 %{_bindir}/%{name}-server-user-wrapper
-%{_datadir}/dbus-1/system.d/%{name}-server.conf
+#{_datadir}/dbus-1/system.d/%{name}-server.conf
 %dir %attr(-,_%{name}-server,_%{name}-server) %{_localstatedir}/lib/%{name}-server
 %{_mandir}/man1/%{name}-server.1.*
 %{_mandir}/man1/%{name}-server-user-wrapper.1.*
 %{_sysusersdir}/%{name}-server.conf
-%{_unitdir}/%{name}-server.service
+%{_sysconfdir}/systemd/system/mumble-server.service
+%{_sysconfdir}/sysusers.d/mumble-server.conf
+%{_sysconfdir}/tmpfiles.d/mumble-server.conf
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}/MumbleServer.ice
+#config(noreplace) %{_sysconfdir}/%{name}/MumbleServer.ice
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
