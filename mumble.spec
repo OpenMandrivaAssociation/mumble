@@ -136,15 +136,17 @@ cp %{S:2} 3rdparty/FindPythonInterpreter/
 %ifnarch %{x86_64}
 	-Doverlay-xcompile=off \
 %endif
+	-Drenamenoise=on \
 	-Dwarnings-as-errors=off \
 	-Dbundled-opus=off \
-	-Dbundled-rnnoise=off \
 	-Dbundled-speex=off \
 	-Dalsa=on \
 	-Dpulseaudio=on \
 	-Dpipewire=on \
 	-Dprotobuf_PROTOC_EXE=$(which protoc) \
 	-G Ninja
+ 
+ #-Dbundled-rnnoise=off \
 
 %build
 %ninja_build -C build
