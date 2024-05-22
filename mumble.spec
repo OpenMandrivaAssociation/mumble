@@ -136,6 +136,7 @@ cp %{S:2} 3rdparty/FindPythonInterpreter/
 %ifnarch %{x86_64}
 	-Doverlay-xcompile=off \
 %endif
+	-Dbundled-renamenoise=on \
 	-Drenamenoise=on \
 	-Dwarnings-as-errors=off \
 	-Dbundled-opus=off \
