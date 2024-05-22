@@ -183,7 +183,9 @@ cp -f %{S:6} %{buildroot}%{_sysusersdir}/mumble-server.conf
 %{_mandir}/man1/%{name}-server.1.*
 %{_mandir}/man1/%{name}-server-user-wrapper.1.*
 %{_sysusersdir}/%{name}-server.conf
-#{_unitdir}/%{name}-server.service
+%{_sysconfdir}/systemd/system/mumble-server.service
+%{_sysconfdir}/sysusers.d/mumble-server.conf
+%{_sysconfdir}/tmpfiles.d/mumble-server.conf
 %dir %{_sysconfdir}/%{name}
 #config(noreplace) %{_sysconfdir}/%{name}/MumbleServer.ice
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
