@@ -29,6 +29,7 @@ BuildRequires:	ninja
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt5LinguistTools)
 BuildRequires:	cmake(Poco)
+BuildRequires:	cmake(Utf8Proc)
 BuildRequires:	poco
 BuildRequires:	qt6-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
