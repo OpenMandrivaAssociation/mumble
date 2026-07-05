@@ -138,6 +138,7 @@ This package provides Murmur, the VOIP server for Mumble.
 	-Doverlay-xcompile=off \
 %endif
 	-Drnnoise=on \
+	-Dbundled-rnnoise=off \
 	-Dwarnings-as-errors=off \
 	-Dbundled-opus=off \
 	-Dbundled-speex=off \
