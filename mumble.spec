@@ -129,7 +129,6 @@ This package provides Murmur, the VOIP server for Mumble.
 
 %prep
 %autosetup -p1
-cp %{S:2} 3rdparty/FindPythonInterpreter/
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
