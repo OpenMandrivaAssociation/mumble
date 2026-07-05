@@ -5,8 +5,8 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.5.857
-Release:	2
+Version:	1.6.870
+Release:	1
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
@@ -32,16 +32,16 @@ BuildRequires:	cmake(Poco)
 BuildRequires:	cmake(Utf8Proc)
 BuildRequires:	poco
 BuildRequires:	qt6-qttranslations
-BuildRequires:	pkgconfig(Qt5Core)
-BuildRequires:	pkgconfig(Qt5Concurrent)
-BuildRequires:	pkgconfig(Qt5DBus)
-BuildRequires:	pkgconfig(Qt5Gui)
-BuildRequires:	pkgconfig(Qt5Help)
-BuildRequires:	pkgconfig(Qt5Network)
-BuildRequires:	pkgconfig(Qt5Sql)
-BuildRequires:	pkgconfig(Qt5Svg)
-BuildRequires:	pkgconfig(Qt5Widgets)
-BuildRequires:	pkgconfig(Qt5Xml)
+BuildRequires:	pkgconfig(Qt6Core)
+BuildRequires:	pkgconfig(Qt6Concurrent)
+BuildRequires:	pkgconfig(Qt6DBus)
+BuildRequires:	pkgconfig(Qt6Gui)
+BuildRequires:	pkgconfig(Qt6Help)
+BuildRequires:	pkgconfig(Qt6Network)
+BuildRequires:	pkgconfig(Qt6Sql)
+BuildRequires:	pkgconfig(Qt6Svg)
+BuildRequires:	pkgconfig(Qt6Widgets)
+BuildRequires:	pkgconfig(Qt6Xml)
 BuildRequires:	pkgconfig(libutf8proc)
 BuildRequires:  pkgconfig(expat)
 BuildRequires:	pkgconfig(python)
@@ -84,7 +84,7 @@ BuildRequires:	pkgconfig(speech-dispatcher)
 #Celt is currently bundled until we fix system version. Anyway it neec compact version 0.7 (angry.p)
 #Requires:	celt
 
-Requires:	qt5-database-plugin-sqlite
+Requires:	qt6-qtbase-sql-sqlite
 Requires:	%{name}-plugins = %{version}-%{release}
 Recommends:	%{name}-protocol-plasma5
 
@@ -121,7 +121,7 @@ Requires(preun): rpm-helper
 # (cg) ice-devel should require this itself, but it doesn't...
 #BuildRequires:	ice
 
-Requires:	qt5-database-plugin-sqlite
+Requires:	qt6-qtbase-sql-sqlite
 Requires:	dbus
 
 %description	server
@@ -138,8 +138,7 @@ cp %{S:2} 3rdparty/FindPythonInterpreter/
 %ifnarch %{x86_64}
 	-Doverlay-xcompile=off \
 %endif
-	-Dbundled-renamenoise=on \
-	-Drenamenoise=on \
+	-Drnnoise=on \
 	-Dwarnings-as-errors=off \
 	-Dbundled-opus=off \
 	-Dbundled-speex=off \
