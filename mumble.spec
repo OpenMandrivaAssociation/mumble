@@ -27,7 +27,7 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	cmake
 BuildRequires:	ninja
 BuildRequires:	cmake(ECM)
-BuildRequires:	cmake(Qt5LinguistTools)
+BuildRequires:	cmake(Qt6LinguistTools)
 BuildRequires:	cmake(Poco)
 BuildRequires:	cmake(Utf8Proc)
 BuildRequires:	poco
