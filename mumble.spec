@@ -13,6 +13,8 @@ Url:		https://www.mumble.info
 Patch0:		mumble-server_config_database_path.patch
 #Patch1:		auxiliary_files_fallback_path_fix.patch
 Patch2:		mumble-fix-build.patch
+# OpenSSL 4's X509_get_subject_name returns a const name.
+Patch3:		mumble-1.5.939-openssl4-subject-name.patch
 Source0:	https://github.com/mumble-voip/mumble/releases/download/v%{version}/mumble-%{version}.tar.gz
 # conf files courtesy of debian package
 Source1:	%{name}-server-web.conf
@@ -33,7 +35,7 @@ BuildRequires:	cmake(Utf8Proc)
 BuildRequires:	poco
 BuildRequires:	qt6-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
-# Qt5CoreConfig.cmake checks for %{_libdir}/qt5/bin/qmake, which is in qmake5.
+# Qt5CoreConfig.cmake checks for qmake, which is in the qmake5 package.
 BuildRequires:	qmake5
 BuildRequires:	pkgconfig(Qt5Concurrent)
 BuildRequires:	pkgconfig(Qt5DBus)
