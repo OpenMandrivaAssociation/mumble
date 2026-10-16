@@ -33,6 +33,8 @@ BuildRequires:	cmake(Utf8Proc)
 BuildRequires:	poco
 BuildRequires:	qt6-qttranslations
 BuildRequires:	pkgconfig(Qt5Core)
+# Qt5CoreConfig.cmake checks for %{_libdir}/qt5/bin/qmake, which is in qmake5.
+BuildRequires:	qmake5
 BuildRequires:	pkgconfig(Qt5Concurrent)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Gui)
