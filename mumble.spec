@@ -5,7 +5,7 @@
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.5.915
+Version:	1.5.939
 Release:	1
 License:	BSD
 Group:		Communications/Telephony
