@@ -6,7 +6,7 @@
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
 Version:	1.5.939
-Release:	1
+Release:	2
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
@@ -80,6 +80,15 @@ BuildRequires:	pkgconfig(dri)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(glut)
 BuildRequires:	egl-devel
+# overlay-xcompile builds libmumbleoverlay.x86 with clang -m32. That
+# links against the i686 sysroot, which is not in the default chroot.
+%ifarch %{x86_64}
+BuildRequires:	cross-i686-openmandriva-linux-gnu-clang
+BuildRequires:	cross-i686-openmandriva-linux-gnu-libc
+BuildRequires:	cross-i686-openmandriva-linux-gnu-gcc
+BuildRequires:	cross-i686-openmandriva-linux-gnu-binutils
+BuildRequires:	cross-i686-openmandriva-linux-gnu-kernel-headers
+%endif
 BuildRequires:	pkgconfig(speech-dispatcher)
 
 #BuildRequires:	g15daemon_client-devel
