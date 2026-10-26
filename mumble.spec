@@ -2,84 +2,59 @@
 %global optflags %(echo %{optflags} |sed -e 's,-m64,,') -O3 -DPROTOBUF_USE_DLLS
 
 %define build_number %(echo %{version} |cut -d. -f3)
+# The 1.6.x tarball is versioned by build number. The git tag is not.
+%global upstream_tag v1.6.0-alpha2
 
 Summary:	Low-latency, high-quality voice communication for gamers
 Name:		mumble
-Version:	1.5.939
-Release:	2
+Version:	1.6.1001
+Release:	1
 License:	BSD
 Group:		Communications/Telephony
 Url:		https://www.mumble.info
+# Default SQLite database lives in /var/lib/mumble-server.
 Patch0:		mumble-server_config_database_path.patch
-#Patch1:		auxiliary_files_fallback_path_fix.patch
-Patch2:		mumble-fix-build.patch
-# OpenSSL 4's X509_get_subject_name returns a const name.
-Patch3:		mumble-1.5.939-openssl4-subject-name.patch
-Source0:	https://github.com/mumble-voip/mumble/releases/download/v%{version}/mumble-%{version}.tar.gz
-# conf files courtesy of debian package
-Source1:	%{name}-server-web.conf
-Source2:	FindPythonInterpreter.cmake
-Source3:	%{name}-server-init.mdv
-Source4:	%{name}-server.logrotate
-Source5:	%{name}-tmpfiles.conf
-Source6:	mumble-server.sysusers
+Source0:	https://github.com/mumble-voip/mumble/releases/download/%{upstream_tag}/mumble-%{version}.tar.gz
 
-BuildConflicts:	celt-devel >= 0.7.0
-BuildRequires:	desktop-file-utils
 BuildRequires:	cmake
 BuildRequires:	ninja
-BuildRequires:	cmake(ECM)
-BuildRequires:	cmake(Qt5LinguistTools)
+BuildRequires:	python
+# 1.6 is Qt 6 only.
+BuildRequires:	qmake-qt6
+BuildRequires:	cmake(Qt6LinguistTools)
+BuildRequires:	pkgconfig(Qt6Concurrent)
+BuildRequires:	pkgconfig(Qt6Core)
+BuildRequires:	pkgconfig(Qt6DBus)
+BuildRequires:	pkgconfig(Qt6Gui)
+BuildRequires:	pkgconfig(Qt6Network)
+BuildRequires:	pkgconfig(Qt6Sql)
+BuildRequires:	pkgconfig(Qt6Svg)
+BuildRequires:	pkgconfig(Qt6Widgets)
+BuildRequires:	pkgconfig(Qt6Xml)
+BuildRequires:	cmake(Boost)
+BuildRequires:	cmake(CLI11)
 BuildRequires:	cmake(Poco)
-BuildRequires:	cmake(Utf8Proc)
-BuildRequires:	poco
-BuildRequires:	qt6-qttranslations
-BuildRequires:	pkgconfig(Qt5Core)
-# Qt5CoreConfig.cmake checks for qmake, which is in the qmake5 package.
-BuildRequires:	qmake5
-BuildRequires:	pkgconfig(Qt5Concurrent)
-BuildRequires:	pkgconfig(Qt5DBus)
-BuildRequires:	pkgconfig(Qt5Gui)
-BuildRequires:	pkgconfig(Qt5Help)
-BuildRequires:	pkgconfig(Qt5Network)
-BuildRequires:	pkgconfig(Qt5Sql)
-BuildRequires:	pkgconfig(Qt5Svg)
-BuildRequires:	pkgconfig(Qt5Widgets)
-BuildRequires:	pkgconfig(Qt5Xml)
-BuildRequires:	pkgconfig(libutf8proc)
-BuildRequires:  pkgconfig(expat)
-BuildRequires:	pkgconfig(python)
-BuildRequires:	pkgconfig(alsa)
-BuildRequires:	pkgconfig(libpulse)
-BuildRequires:	pkgconfig(libpipewire-0.3)
-BuildRequires:	pkgconfig(rnnoise)
-BuildRequires:	boost-devel
-BuildRequires:	protobuf-compiler
-# For protobuf
 BuildRequires:	cmake(absl)
-BuildRequires:	pkgconfig(avahi-compat-libdns_sd)
-# NOT YET IN OMV
-#BuildRequires:	pkgconfig(grpc)
-BuildRequires:	pkgconfig(libcap)
-BuildRequires:	pkgconfig(protobuf)
-BuildRequires:	pkgconfig(speex) >= 1.2
-BuildRequires:	pkgconfig(speexdsp)
-# NOT YET IN OMV
-#BuildRequires:	pkgconfig(celt071)
-#BuildRequires:	pkgconfig(celt)
-BuildRequires:	pkgconfig(libpulse)
+BuildRequires:	cmake(nlohmann_json)
+BuildRequires:	cmake(spdlog)
+BuildRequires:	cmake(utf8cpp)
+BuildRequires:	protobuf-compiler
 BuildRequires:	pkgconfig(alsa)
-BuildRequires:	pkgconfig(ogg)
-BuildRequires:	pkgconfig(openssl)
-BuildRequires:	pkgconfig(xevie)
-BuildRequires:	pkgconfig(sndfile)
-BuildRequires:	pkgconfig(opus)
-BuildRequires:	pkgconfig(xi) >= 1.6.0
+BuildRequires:	pkgconfig(avahi-compat-libdns_sd)
 BuildRequires:	pkgconfig(gl)
-BuildRequires:	pkgconfig(dri)
-BuildRequires:	pkgconfig(glu)
-BuildRequires:	pkgconfig(glut)
-BuildRequires:	egl-devel
+BuildRequires:	pkgconfig(libcap)
+BuildRequires:	pkgconfig(libmariadb)
+BuildRequires:	pkgconfig(libpq)
+BuildRequires:	pkgconfig(openssl)
+BuildRequires:	pkgconfig(opus)
+BuildRequires:	pkgconfig(protobuf)
+BuildRequires:	pkgconfig(rnnoise)
+BuildRequires:	pkgconfig(sndfile)
+BuildRequires:	pkgconfig(speech-dispatcher)
+BuildRequires:	pkgconfig(speexdsp)
+BuildRequires:	pkgconfig(sqlite3)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xi) >= 1.6.0
 # overlay-xcompile builds libmumbleoverlay.x86 with clang -m32. That
 # links against the i686 sysroot, which is not in the default chroot.
 %ifarch %{x86_64}
@@ -89,20 +64,12 @@ BuildRequires:	cross-i686-openmandriva-linux-gnu-gcc
 BuildRequires:	cross-i686-openmandriva-linux-gnu-binutils
 BuildRequires:	cross-i686-openmandriva-linux-gnu-kernel-headers
 %endif
-BuildRequires:	pkgconfig(speech-dispatcher)
 
-#BuildRequires:	g15daemon_client-devel
-
-# For sanity, add as dep celt
-#Celt is currently bundled until we fix system version. Anyway it neec compact version 0.7 (angry.p)
-#Requires:	celt
-
-Requires:	qt5-database-plugin-sqlite
-Requires:	%{name}-plugins = %{version}-%{release}
+Requires:	qt6-qtbase-sql-sqlite
+Requires:	%{name}-plugins = %{EVRD}
 Recommends:	%{name}-protocol-plasma5
-
+Recommends:	qt6-qttranslations
 Recommends:	speech-dispatcher
-Recommends:	g15daemon
 
 %description
 Low-latency, high-quality voice communication for gamers.
@@ -115,7 +82,7 @@ audible to other players.
 %package	plugins
 Summary:	Mumble plugins
 Group:		Communications/Telephony
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{EVRD}
 
 %description	plugins
 This packages provides the Mumble plugins.
@@ -123,46 +90,43 @@ This packages provides the Mumble plugins.
 %package	server
 Summary:	Murmur, the VOIP server for Mumble
 Group:		Communications/Telephony
-Requires(post):	systemd
-Requires(pre):	rpm-helper
-Requires(post):	rpm-helper
-Requires(preun): rpm-helper
-
-# Currently ice source is dropped in Cooker. Let's enable it when package brack to repo (angry.p)
-# keep ice-devel, pkgconfig(ice) is not the same ice devel pkg
-#BuildRequires:	ice-devel
-# (cg) ice-devel should require this itself, but it doesn't...
-#BuildRequires:	ice
-
-Requires:	qt5-database-plugin-sqlite
-Requires:	dbus
 
 %description	server
 This package provides Murmur, the VOIP server for Mumble.
 
 %prep
-%autosetup -p1
-cp %{S:2} 3rdparty/FindPythonInterpreter/
+%autosetup -p1 -n %{name}-%{version}
+
+# System SOCI is 4.0.3. Mumble needs the bundled SOCI >= 4.1 for its BLOB API.
+
 %cmake \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir} \
+	-DMUMBLE_INSTALL_SERVICEFILEDIR:PATH=%{_unitdir} \
+	-DMUMBLE_INSTALL_SYSUSERSDIR:PATH=%{_sysusersdir} \
+	-DMUMBLE_INSTALL_TMPFILESDIR:PATH=%{_tmpfilesdir} \
 	-DBUILD_NUMBER=%{build_number} \
-	-Dice=off \
+	-Dice=OFF \
 %ifnarch %{x86_64}
-	-Doverlay-xcompile=off \
+	-Doverlay-xcompile=OFF \
 %endif
-	-Dbundled-renamenoise=on \
-	-Drenamenoise=on \
-	-Dwarnings-as-errors=off \
-	-Dbundled-opus=off \
-	-Dbundled-speex=off \
-	-Dalsa=on \
-	-Dpulseaudio=on \
-	-Dpipewire=on \
-	-Dprotobuf_PROTOC_EXE=$(which protoc) \
+	-Dwarnings-as-errors=OFF \
+	-Dbundled-utfcpp=OFF \
+	-Dbundled-json=OFF \
+	-Dbundled-spdlog=OFF \
+	-Dbundled-cli11=OFF \
+	-Dbundled-speex=OFF \
+	-Dbundled-rnnoise=OFF \
+	-Drnnoise=ON \
+	-Dbundled-soci=ON \
+	-Denable-sqlite=ON \
+	-Denable-mysql=ON \
+	-Denable-postgresql=ON \
+	-Dalsa=ON \
+	-Dpulseaudio=ON \
+	-Dpipewire=ON \
+	-Dspeechd=ON \
 	-G Ninja
- 
- #-Dbundled-rnnoise=off \
 
 %build
 %ninja_build -C build
@@ -172,38 +136,32 @@ cp %{S:2} 3rdparty/FindPythonInterpreter/
 
 mkdir -p %{buildroot}%{_localstatedir}/lib/mumble-server
 
-mkdir -p %{buildroot}%{_sysusersdir}
-cp -f %{S:6} %{buildroot}%{_sysusersdir}/mumble-server.conf
-
 %files
 %license LICENSE
 %{_bindir}/%{name}
+# The overlay is not built on ARM.
+%ifnarch %{arm} aarch64
 %{_bindir}/%{name}-overlay
+%{_mandir}/man1/mumble-overlay.1.*
+%endif
 %{_datadir}/applications/info.mumble.Mumble.desktop
 %{_datadir}/metainfo/info.mumble.Mumble.appdata.xml
 %{_iconsdir}/hicolor/*x*/apps/mumble.png
 %{_iconsdir}/hicolor/scalable/apps/mumble.svg
-%{_mandir}/man1/mumble-overlay.1.*
 %{_mandir}/man1/mumble.1.*
 
 %files plugins
 %{_libdir}/%{name}
 
-%pre server
-%sysusers_create_package mumble-server %{S:6}
-
 %files server
 %license LICENSE
 %{_bindir}/%{name}-server
 %{_bindir}/%{name}-server-user-wrapper
-#{_datadir}/dbus-1/system.d/%{name}-server.conf
-%dir %attr(-,_%{name}-server,_%{name}-server) %{_localstatedir}/lib/%{name}-server
+%dir %attr(0750,_mumble-server,_mumble-server) %{_localstatedir}/lib/%{name}-server
 %{_mandir}/man1/%{name}-server.1.*
 %{_mandir}/man1/%{name}-server-user-wrapper.1.*
 %{_sysusersdir}/%{name}-server.conf
-%{_sysconfdir}/systemd/system/mumble-server.service
-%{_sysconfdir}/sysusers.d/mumble-server.conf
-%{_sysconfdir}/tmpfiles.d/mumble-server.conf
+%{_unitdir}/%{name}-server.service
+%{_tmpfilesdir}/%{name}-server.conf
 %dir %{_sysconfdir}/%{name}
-#config(noreplace) %{_sysconfdir}/%{name}/MumbleServer.ice
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}-server.ini
