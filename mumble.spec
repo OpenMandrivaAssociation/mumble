@@ -31,7 +31,9 @@ BuildRequires:	pkgconfig(Qt6Sql)
 BuildRequires:	pkgconfig(Qt6Svg)
 BuildRequires:	pkgconfig(Qt6Widgets)
 BuildRequires:	pkgconfig(Qt6Xml)
-BuildRequires:	cmake(Boost)
+# cmake(Boost) is also provided by cmake, which does not ship BoostConfig.
+# The client and server use header-only pieces spread across the Boost packages.
+BuildRequires:	boost-devel
 BuildRequires:	cmake(CLI11)
 BuildRequires:	cmake(Poco)
 # Poco's CMake config needs these. cmake(utf8proc) is shipped by poco-devel
