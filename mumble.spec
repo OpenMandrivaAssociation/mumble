@@ -34,6 +34,10 @@ BuildRequires:	pkgconfig(Qt6Xml)
 BuildRequires:	cmake(Boost)
 BuildRequires:	cmake(CLI11)
 BuildRequires:	cmake(Poco)
+# Poco's CMake config needs these. cmake(utf8proc) is shipped by poco-devel
+# and cmake(expat) by cmake, so neither dependency installs the library.
+BuildRequires:	pkgconfig(expat)
+BuildRequires:	pkgconfig(libutf8proc)
 BuildRequires:	cmake(absl)
 BuildRequires:	cmake(nlohmann_json)
 BuildRequires:	cmake(spdlog)
